@@ -1,0 +1,49 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.6.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'war'
+	id "eclipse-wtp"
+}
+
+group = 'com.techboard'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+/*
+	* 해당 Gradle Dependencies에서 권장하는것
+	* complie은 Gradle 3.0 버전 이후 제공은 하지만 기능에 대한 보장은 하지 않는다
+	* complie보다는 implementation 이나 api를 권장한다.
+*/
+
+dependencies {
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'			// Spring Boot Starter
+ 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.1'	// Mybatis Starter
+  	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16' 		// log4j2
+	implementation 'mysql:mysql-connector-java:5.1.46'							// MySQL Connection
+
+	implementation 'org.projectlombok:lombok'			// Lombok
+
+	implementation 'javax.servlet:jstl:1.2'				// JSP Page
+	implementation 'org.apache.tiles:tiles-jsp:3.0.8'	// JSP tiles
+	implementation 'org.webjars:jquery:2.2.1'			// JQuery
+  	implementation 'org.webjars:jquery-ui:1.11.4'		// JQuery UI
+  	implementation 'org.webjars:bootstrap:3.3.6'		// Bootstrap
+    
+//    implementation 'com.fasterxml.jackson.core:2.7.3'	// Jackson
+    
+	providedRuntime ("org.springframework.boot:spring-boot-starter-tomcat")
+	 testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude module: 'junit'
+    }
+
+}
+
+test {
+	useJUnitPlatform()
+}

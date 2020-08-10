@@ -1,0 +1,51 @@
+
+body {
+ position: absolute;
+  top: 20%;
+  bottom: 25%;
+  left: 15%;
+  width: 1200px;
+  height: 300px;
+  margin: -50px 0 0 -50px;
+}
+
+
+
+#testback{
+	background:  red;
+	color: yellow;
+	
+}
+
+#test{
+	margin: 10px;
+	padding: 10px;
+	color
+}
+
+#box
+{
+ position: absolute;
+ width: 500px;
+ height: 500px;
+ left: 50%;
+ top: 50%;
+ margin-left: -250px;
+ margin-top: -250px;
+ border: #000 solid 1px;
+}
+
+.two-line{
+overflow: hidden;
+ text-overflow: ellipsis;
+ display: -webkit-box;
+ -webkit-line-clamp: 2; /* 라인수 */
+ -webkit-box-orient: vertical;
+ word-wrap:break-word;
+}
+
+#text-center{text-align: center;}
+#text-left{text-align: left;}
+#text-import{color: red; font-weight: bold;}
+#btn-right{align:right;}
+#width-200{width: 200px;}

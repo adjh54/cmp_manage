@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.techboard.dao.cmpInfo.CmpApplyInfoMapper">
+
+
+	<!-- 페이징 적용 상단 -->
+	<sql id="COMMON_PAGING_HEADER">
+	SELECT R1.* FROM (
+	</sql>
+	
+	<!-- 페이징 적용 하단 -->
+	<sql id="COMMON_PAGING_TAIL">
+		) R1
+		<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
+		LIMIT #{startIndex}, #{pageSize}
+		</if>
+	</sql>
+	
+    <!-- cmpApplyInfoInsert - 회사지원하기 - 회사_지원 테이블 등록 -->
+    <insert id="cmpApplyInfoInsert" parameterType="com.techboard.vo.cmpInfo.CmpApplyInfoVO">
+    	/** cmpApplyInfoInsert - 회사지원하기 - 회사_지원 테이블 등록 **/
+    	INSERT INTO TB_CMP_APPLY_INFO(
+				CMP_APPLY_NO
+			,	CMP_NO
+		    ,	CMP_APPLY_YN
+		    ,	CMP_APPLY_DOC_KIND_CODE
+		    ,	CMP_APPLY_1ST_KIND_CODE
+		    ,	CMP_APPLY_2ST_KIND_CODE
+		    ,	CMP_APPLY_DOC_INTERVIEW_INFO
+		    ,	CMP_APPLY_1ST_INTERVIEW_INFO
+		    ,	CMP_APPLY_2ST_INTERVIEW_INFO
+		    ,	CMP_APPLY_DOC_INTERVIEW_DTTM		
+		    ,	CMP_APPLY_1st_INTERVIEW_DTTM		
+		    ,	CMP_APPLY_2st_INTERVIEW_DTTM
+		    ,	CMP_APPLY_DOC_INTERVIEW_TIME
+		    ,	CMP_APPLY_1st_INTERVIEW_TIME		
+		    ,	CMP_APPLY_2st_INTERVIEW_TIME
+		    ,	USER_ID
+		    ,	REG_DTTM
+		    ,	MOD_DTTM
+		    ,	USE_YN
+		)
+		SELECT COUNT(cmp_no)+1 
+			,	#{cmpNo}
+		    ,	'Y'
+		    ,	'A02'
+		    ,	'A01'
+		    ,	'A01'
+		    ,	'서류지원 완료'
+		    ,	NULL
+		    ,	NULL
+		    ,	DATE_FORMAT(SYSDATE(), '%Y-%m-%d')	
+		    ,	NULL		
+		    ,	NULL
+		    ,	DATE_FORMAT(SYSDATE(), '%H:%i')
+		    ,	NULL		
+		    ,	NULL
+		    ,	'admin'
+		    ,	date_format(sysdate(), '%Y%m%d')
+		    ,	NULL
+		    ,	'Y'
+		FROM 	TB_CMP_APPLY_INFO
+    </insert>
+
+	
+	<!-- cmpApplyInfoList - 회사 지원 정보 목록 조회 -->
+    <select id="cmpApplyInfoList" resultType="com.techboard.vo.cmpInfo.CmpApplyInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpApplyInfoVO">
+		/** cmpApplyInfoList- 회사 지원 정보 목록 조회  **/
+		SELECT 	@rownum:=@rownum+1	AS rownum
+			,	V.*
+		FROM	(
+					<include refid="COMMON_PAGING_HEADER"/>
+					SELECT 	A.CMP_APPLY_NO						AS 	cmpApplyNo	
+						,	A.CMP_NO							AS 	cmpNo
+					    ,	A.CMP_APPLY_YN						AS 	cmpApplyYn
+					    ,	A.CMP_APPLY_DOC_KIND_CODE			AS 	cmpApplyDocKindCode
+					    ,	A.CMP_APPLY_1ST_KIND_CODE			AS 	cmpApply1stKindCode
+					    ,	A.CMP_APPLY_2ST_KIND_CODE			AS 	cmpApply2stKindCode
+					    ,	A.CMP_APPLY_DOC_INTERVIEW_INFO		AS 	cmpApplyDocInterviewInfo
+					    ,	A.CMP_APPLY_1ST_INTERVIEW_INFO		AS 	cmpApply1stInterviewInfo
+					    ,	A.CMP_APPLY_2ST_INTERVIEW_INFO		AS 	cmpApply2stInterviewInfo
+					    ,	A.CMP_APPLY_DOC_INTERVIEW_DTTM		AS 	cmpApplyDocInterviewDttm
+					    ,	A.CMP_APPLY_1ST_INTERVIEW_DTTM		AS 	cmpApply1stInterviewDttm
+					    ,	A.CMP_APPLY_2ST_INTERVIEW_DTTM		AS 	cmpApply2stInterviewDttm
+   					    ,	A.CMP_APPLY_DOC_INTERVIEW_TIME		AS 	cmpApplyDocInterviewTime
+					    ,	A.CMP_APPLY_1st_INTERVIEW_TIME		AS 	cmpApply1stInterviewTime
+					    ,	A.CMP_APPLY_2st_INTERVIEW_TIME		AS 	cmpApply2stInterviewTime
+					    ,	A.CMP_APPLY_DOC_RESULT_DTTM			AS 	cmpApplyDocResultDttm
+					    ,	A.CMP_APPLY_1ST_RESULT_DTTM			AS 	cmpApply1stResultDttm
+					    ,	A.CMP_APPLY_2ST_RESULT_DTTM			AS 	cmpApply2stResultDttm
+					    ,	CASE WHEN DAYOFWEEK(A.CMP_APPLY_DOC_INTERVIEW_DTTM) = 1 THEN '일'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_DOC_INTERVIEW_DTTM) = 2 THEN '월'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_DOC_INTERVIEW_DTTM) = 3 THEN '화'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_DOC_INTERVIEW_DTTM) = 4 THEN '수'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_DOC_INTERVIEW_DTTM) = 5 THEN '목'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_DOC_INTERVIEW_DTTM) = 6 THEN '금'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_DOC_INTERVIEW_DTTM) = 7 THEN '토'END AS applyDocInterviewDayOfWeek
+					    ,	CASE WHEN DAYOFWEEK(A.CMP_APPLY_1ST_INTERVIEW_DTTM) = 1 THEN '일'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_1ST_INTERVIEW_DTTM) = 2 THEN '월'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_1ST_INTERVIEW_DTTM) = 3 THEN '화'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_1ST_INTERVIEW_DTTM) = 4 THEN '수'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_1ST_INTERVIEW_DTTM) = 5 THEN '목'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_1ST_INTERVIEW_DTTM) = 6 THEN '금'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_1ST_INTERVIEW_DTTM) = 7 THEN '토'END AS apply1stInterviewDayOfWeek
+					    ,	CASE WHEN DAYOFWEEK(A.CMP_APPLY_2ST_INTERVIEW_DTTM) = 1 THEN '일'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_2ST_INTERVIEW_DTTM) = 2 THEN '월'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_2ST_INTERVIEW_DTTM) = 3 THEN '화'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_2ST_INTERVIEW_DTTM) = 4 THEN '수'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_2ST_INTERVIEW_DTTM) = 5 THEN '목'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_2ST_INTERVIEW_DTTM) = 6 THEN '금'
+                            WHEN DAYOFWEEK(A.CMP_APPLY_2ST_INTERVIEW_DTTM) = 7 THEN '토'END AS apply2stInterviewDayOfWeek
+                        ,   ABS(DATEDIFF(DATE_FORMAT(sysdate(), '%Y%m%d'), A.CMP_APPLY_DOC_INTERVIEW_DTTM)) 	AS applyDocExcessDay
+                        ,   ABS(DATEDIFF(DATE_FORMAT(sysdate(), '%Y%m%d'), A.CMP_APPLY_1st_INTERVIEW_DTTM)) 	AS apply1stExcessDay
+                        ,   ABS(DATEDIFF(DATE_FORMAT(sysdate(), '%Y%m%d'), A.CMP_APPLY_2st_INTERVIEW_DTTM)) 	AS apply2stExcessDay
+                        , 	A.CMP_INTERVIEW_PREPARE_INFO 		AS cmpInterviewPrepareInfo
+                        ,	A.CMP_INTERVIEW_REVIEW_INFO			AS cmpInterviewReviewInfo	 
+					    ,	A.USER_ID						AS 	userId
+					    ,	A.REG_DTTM						AS	regDttm
+					    ,	A.MOD_DTTM						AS 	modDttm
+					    ,	A.USE_YN						AS 	useYn
+					    ,	B.CMP_TITLE						AS 	cmpTitle
+					    ,	B.CMP_LOCATION					AS 	cmpLocation	
+					    ,	B.CMP_FOUNDED_YEAR				AS 	cmpFoundedYear
+					    ,	DATE_FORMAT(sysdate(), '%Y') - B.CMP_FOUNDED_YEAR AS foundedYear
+					    ,	FORMAT(B.CMP_EMP_CNT, 0)					AS 	cmpEmpCnt
+					    ,	FORMAT(B.CMP_TOUCH, 0)						AS 	cmpTouch
+					    ,	B.CMP_KIND						AS 	cmpKind
+					    ,	B.CMP_DEADLINE_DTTM				AS 	cmpDeadlineDttm
+					    , 	DATEDIFF(B.CMP_DEADLINE_DTTM, DATE_FORMAT(sysdate(), '%Y%m%d')) AS deadlineDay
+					    ,	B.CMP_JOB_POSITION				AS 	cmpJobPosition
+					    ,	B.CMP_JOB_RESPONSE				AS 	cmpJobResponse
+					    ,	B.CMP_JOB_QUALIFICATION			AS 	cmpJobQualification
+					    ,	B.CMP_JOB_PREFER				AS 	cmpJobPrefer
+					    ,	B.CMP_WAREFARE					AS 	cmpWareFare
+					    ,	B.CMP_COMMENT					AS 	cmpComment
+					    ,	B.CMP_INCEDENCE_RATE			AS 	cmpIncedenceRate
+					    ,	B.CMP_RESIGNATION_RATE			AS 	cmpResignationRate
+					    ,	B.CMP_RECURIT_URL				AS 	cmpRecuritUrl
+					    ,	B.CMP_HOMEPAGE_URL				AS 	cmpHomepageUrl
+					    ,	B.CMP_PROGRAMMER_KIND			AS 	cmpProgrammerKind
+					    , 	B.CMP_FAVORITES_YN				AS 	cmpFavoritesYn
+					    , 	B.CMP_GOOD_YN					AS 	cmpGoodYn
+					    , 	B.CMP_RECURIT_KIND				AS 	cmpRecuritKind
+					    ,	B.CMP_RECURIT_PROCESS			AS 	cmpRecuritProcess
+					FROM 	TB_CMP_APPLY_INFO A
+						,	TB_CMP_INFO B
+					WHERE 	1=1
+					AND		A.cmp_no = B.cmp_no
+					AND		A.cmp_apply_yn = B.cmp_apply_yn
+					AND		A.use_yn = 'Y'
+					AND		B.use_yn = 'N'
+					AND		A.user_id = 'admin'		-- 차후 로그인 기능추가 이후 변경 예정 
+			        ORDER BY A.USE_YN DESC, A.REG_DTTM DESC, A.CMP_APPLY_DOC_INTERVIEW_DTTM
+					<include refid= "COMMON_PAGING_TAIL"/>
+				) V,	
+				(select @rownum:=0) R 
+    </select>
+    
+    <!-- cmpApplyInfoListCnt - 회사 정보 목록 내용 카운트-->
+    <select id="cmpApplyInfoListCnt" resultType="com.techboard.vo.cmpInfo.CmpApplyInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpApplyInfoVO">
+		/** cmpApplyInfoListCnt- 회사 지원 정보 목록 카운트 **/
+		SELECT	COUNT(*)	AS cmpApplyInfoCnt
+		FROM 	TB_CMP_APPLY_INFO A
+			,	TB_CMP_INFO B
+		WHERE 	1=1
+		AND		A.cmp_no = B.cmp_no
+		AND		A.cmp_apply_yn = B.cmp_apply_yn
+		AND		A.use_yn = 'Y'
+		AND		B.use_yn = 'N'
+		AND		A.user_id = 'admin'		-- 차후 로그인 기능추가 이후 변경 예정 
+        ORDER BY A.USE_YN DESC, A.REG_DTTM DESC, A.CMP_APPLY_DOC_INTERVIEW_DTTM
+    </select>
+    
+    <!-- cmpApplyInfoDetail - 회사지원 정보 상세 조회-->
+    <select id="cmpApplyInfoDetail" resultType="com.techboard.vo.cmpInfo.CmpApplyInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpApplyInfoVO">
+    	/** cmpApplyInfoDetail - 회사지원 정보 상세 조회 **/
+    	SELECT 	A.CMP_APPLY_NO					AS 	cmpApplyNo	
+			,	A.CMP_NO						AS 	cmpNo
+		    ,	A.CMP_APPLY_YN					AS 	cmpApplyYn
+		    ,	A.CMP_APPLY_DOC_KIND_CODE			AS 	cmpApplyDocKindCode
+		    ,	A.CMP_APPLY_1ST_KIND_CODE			AS 	cmpApply1stKindCode
+		    ,	A.CMP_APPLY_2ST_KIND_CODE			AS 	cmpApply2stKindCode
+		    ,	A.CMP_APPLY_DOC_INTERVIEW_INFO		AS 	cmpApplyDocInterviewInfo
+		    ,	A.CMP_APPLY_1ST_INTERVIEW_INFO		AS 	cmpApply1stInterviewInfo
+		    ,	A.CMP_APPLY_2ST_INTERVIEW_INFO		AS 	cmpApply2stInterviewInfo
+		    ,	A.CMP_APPLY_DOC_INTERVIEW_DTTM		AS 	cmpApplyDocInterviewDttm
+		    ,	A.CMP_APPLY_1ST_INTERVIEW_DTTM		AS 	cmpApply1stInterviewDttm
+		    ,	A.CMP_APPLY_2ST_INTERVIEW_DTTM		AS 	cmpApply2stInterviewDttm
+ 			,	A.CMP_APPLY_DOC_INTERVIEW_TIME		AS 	cmpApplyDocInterviewTime
+		    ,	A.CMP_APPLY_1ST_INTERVIEW_TIME		AS 	cmpApply1stInterviewTime
+		    ,	A.CMP_APPLY_2ST_INTERVIEW_TIME		AS 	cmpApply2stInterviewTime
+		    ,	A.CMP_APPLY_DOC_RESULT_DTTM			AS 	cmpApplyDocResultDttm
+		    ,	A.CMP_APPLY_1ST_RESULT_DTTM			AS 	cmpApply1stResultDttm
+		    ,	A.CMP_APPLY_2ST_RESULT_DTTM			AS 	cmpApply2stResultDttm
+            , 	A.CMP_INTERVIEW_PREPARE_INFO 		AS cmpInterviewPrepareInfo
+            ,	A.CMP_INTERVIEW_REVIEW_INFO			AS cmpInterviewReviewInfo	 
+		    ,	A.USER_ID							AS 	userId
+		    ,	A.REG_DTTM							AS	regDttm
+		    ,	A.MOD_DTTM							AS 	modDttm
+		    ,	A.USE_YN							AS 	useYn
+		    ,	B.CMP_TITLE							AS 	cmpTitle
+		    ,	B.CMP_LOCATION						AS 	cmpLocation	
+		    ,	B.CMP_FOUNDED_YEAR					AS 	cmpFoundedYear
+		    ,	DATE_FORMAT(sysdate(), '%Y') - B.CMP_FOUNDED_YEAR AS foundedYear
+		    ,	FORMAT(B.CMP_EMP_CNT, 0)			AS 	cmpEmpCnt
+		    ,	FORMAT(B.CMP_TOUCH, 0)				AS 	cmpTouch
+		    ,	B.CMP_KIND							AS 	cmpKind
+		    ,	B.CMP_DEADLINE_DTTM					AS 	cmpDeadlineDttm
+		    , 	DATEDIFF(B.CMP_DEADLINE_DTTM, DATE_FORMAT(sysdate(), '%Y%m%d')) AS deadlineDay
+		    ,	B.CMP_JOB_POSITION					AS 	cmpJobPosition
+		    ,	B.CMP_JOB_RESPONSE					AS 	cmpJobResponse
+		    ,	B.CMP_JOB_QUALIFICATION				AS 	cmpJobQualification
+		    ,	B.CMP_JOB_PREFER					AS 	cmpJobPrefer
+		    ,	B.CMP_WAREFARE						AS 	cmpWareFare
+		    ,	B.CMP_COMMENT						AS 	cmpComment
+		    ,	B.CMP_INCEDENCE_RATE				AS 	cmpIncedenceRate
+		    ,	B.CMP_RESIGNATION_RATE				AS 	cmpResignationRate
+		    ,	B.CMP_RECURIT_URL					AS 	cmpRecuritUrl
+		    ,	B.CMP_HOMEPAGE_URL					AS 	cmpHomepageUrl
+		    ,	B.CMP_PROGRAMMER_KIND				AS 	cmpProgrammerKind
+		    , 	B.CMP_FAVORITES_YN					AS 	cmpFavoritesYn
+		    , 	B.CMP_GOOD_YN						AS 	cmpGoodYn
+		    , 	B.CMP_RECURIT_KIND					AS 	cmpRecuritKind
+		    ,	B.CMP_RECURIT_PROCESS				AS 	cmpRecuritProcess
+		FROM 	TB_CMP_APPLY_INFO A
+			,	TB_CMP_INFO B
+		WHERE 	1=1
+		AND		A.cmp_no = B.cmp_no
+		AND		A.cmp_apply_yn = B.cmp_apply_yn
+		AND		A.use_yn = 'Y'
+		AND		B.use_yn = 'N'
+		AND		A.user_id = 'admin'		-- 차후 로그인 기능추가 이후 변경 예정 
+		AND		A.CMP_APPLY_NO = #{cmpApplyNo}
+    </select>
+    
+    <!-- cmpApplyInfoUpdate - 회사 지원정보 수정-->
+    <update id="cmpApplyInfoUpdate" parameterType="com.techboard.vo.cmpInfo.CmpApplyInfoVO">
+    	/** cmpApplyInfoUpdate - 회사 지원정보 수정 **/
+    	UPDATE 	TB_CMP_APPLY_INFO
+		SET		CMP_APPLY_DOC_KIND_CODE = #{cmpApplyDocKindCode}
+		    ,	CMP_APPLY_1ST_KIND_CODE = #{cmpApply1stKindCode}
+		    ,	CMP_APPLY_2ST_KIND_CODE = #{cmpApply2stKindCode}
+
+		    <if test=' ("A01" == cmpApplyDocKindCode) or ("A02" == cmpApplyDocKindCode) or ("A06" == cmpApplyDocKindCode) or ("A08" == cmpApplyDocKindCode) '>
+		    ,	CMP_APPLY_DOC_INTERVIEW_INFO = #{cmpApplyDocInterviewInfo}
+		    ,	CMP_APPLY_DOC_INTERVIEW_DTTM = #{cmpApplyDocInterviewDttm}
+		    , 	CMP_APPLY_DOC_INTERVIEW_TIME = #{cmpApplyDocInterviewTime}
+			</if>
+		    <if test=' ("A03" == cmpApplyDocKindCode) or ("A04" == cmpApplyDocKindCode) or ("A07" == cmpApplyDocKindCode) '>
+		    ,	CMP_APPLY_DOC_RESULT_DTTM = #{cmpApplyDocResultDttm}
+			</if>
+			
+			<if test=' ("A01" == cmpApply1stKindCode) or ("A02" == cmpApply1stKindCode) or ("A06" == cmpApply1stKindCode) or ("A08" == cmpApply1stKindCode) '>
+		    ,	CMP_APPLY_1ST_INTERVIEW_INFO	= #{cmpApply1stInterviewInfo}
+		    ,	CMP_APPLY_1ST_INTERVIEW_DTTM = #{cmpApply1stInterviewDttm}
+		    , 	CMP_APPLY_1ST_INTERVIEW_TIME = #{cmpApply1stInterviewTime}
+			</if>
+			<if test=' ("A03" == cmpApply1stKindCode) or ("A04" == cmpApply1stKindCode) or ("A07" == cmpApply1stKindCode) '>
+		    ,	CMP_APPLY_1ST_RESULT_DTTM = #{cmpApply1stResultDttm}
+			</if>
+
+			<if test=' ("A01" == cmpApply2stKindCode) or ("A02" == cmpApply1stKindCode) or ("A06" == cmpApply1stKindCode) or ("A08" == cmpApply1stKindCode) '>
+		    ,	CMP_APPLY_2ST_INTERVIEW_INFO = #{cmpApply2stInterviewInfo}
+		    ,	CMP_APPLY_2ST_INTERVIEW_DTTM = #{cmpApply2stInterviewDttm}
+		    , 	CMP_APPLY_2ST_INTERVIEW_TIME = #{cmpApply2stInterviewTime}
+			</if>
+			<if test=' ("A03" == cmpApply2stKindCode) or ("A04" == cmpApply2stKindCode) or ("A07" == cmpApply2stKindCode) '>
+		    ,	CMP_APPLY_2ST_RESULT_DTTM = #{cmpApply2stResultDttm}
+			</if>
+			<if test="null != cmpInterviewPrepareInfo and !(''.equals(cmpInterviewPrepareInfo))">
+			, 	CMP_INTERVIEW_PREPARE_INFO = #{cmpInterviewPrepareInfo}
+			</if>
+			<if test="null != cmpInterviewReviewInfo and !(''.equals(cmpInterviewReviewInfo))">
+            ,	CMP_INTERVIEW_REVIEW_INFO	= #{cmpInterviewReviewInfo}
+			</if>
+		    ,	MOD_DTTM = date_format(sysdate(), '%Y%m%d')
+		WHERE 	CMP_APPLY_NO = #{cmpApplyNo}
+    </update>
+    
+    
+
+</mapper>

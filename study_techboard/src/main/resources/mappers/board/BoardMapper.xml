@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.techboard.dao.board.BoardMapper">
+	
+	<sql id="COMMON_PAGING_HEADER">
+	SELECT R1.* FROM (
+	</sql>
+	
+	<sql id="COMMON_PAGING_TAIL">
+		) R1
+		<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
+		LIMIT #{startIndex}, #{pageSize}
+		</if>
+	</sql>
+	
+	<!-- selectBoardList - 게시물 목록 조회 -->
+    <select id="selectBoardList" resultType="com.techboard.vo.board.BoardVO" parameterType="com.techboard.vo.board.BoardVO">
+		/** selectBoardList- 게시물 목록 조회  **/
+		SELECT 	@rownum:=@rownum+1	AS rownum
+			,	V.*
+		FROM	(
+					<include refid="COMMON_PAGING_HEADER"/>
+					SELECT 	A.BOARD_UNIQ_NO 	AS boardUniqNo
+					,		A.BOARD_ID			AS boardId
+					,		A.BOARD_KIND_CODE	AS boardKindCode
+			        ,		B.BOARD_KIND_NAME	AS boardKindName
+					,		A.BOARD_TITLE		AS boardTitle
+					,		A.BOARD_CN			AS boardCn
+					,		A.GRP_CTGR1			AS grpCtgr1
+					,		A.GRP_CTGR2			AS grpCtgr2
+					,		A.GRP_CTGR3			AS grpCtgr3
+					,		A.GRP_CTGR4			AS grpCtgr4
+					,		A.GRP_CTGR5			AS grpCtgr5
+					,		A.USE_YN			AS useYn
+					,		A.APLC_ID			AS aplcId
+					,		A.REGST_ID			AS regstId
+					,		DATE_FORMAT(A.RQST_DTTM, '%Y-%m-%d')	AS rqstDttm
+					,		DATE_FORMAT(A.RGSR_DTTM, '%Y-%m-%d')	AS rgsrDttm
+					,		A.RQST_TP_CD		AS rqstTpCd
+					,		A.ADD_DESC_CN		AS addDescCn
+					,		A.QRY_CNT			AS qryCnt
+					FROM 	tb_board A
+					,		tb_board_kind B
+			        WHERE	A.BOARD_KIND_CODE = B.BOARD_KIND_CODE
+			        AND		A.USE_YN = 'Y'
+			        AND 	B.USE_YN = 'Y'
+			        <if test="null != boardKindName and !(''.equals(boardKindName))">
+			        AND 	B.BOARD_KIND_NAME LIKE CONCAT('%', UPPER(#{boardKindName}), '%') 
+			        </if>
+			        <if test="null != boardTitle and !(''.equals(boardTitle))">
+				    AND 	A.BOARD_TITLE LIKE CONCAT('%', #{boardTitle}, '%') 
+			        </if>
+			        <if test="null != boardCn and !(''.equals(boardCn))">
+			        AND 	A.BOARD_CN LIKE CONCAT('%', #{boardCn}, '%') 
+			        </if>
+			        <if test="null != regstId and !(''.equals(regstId))">
+			        AND 	A.REGST_ID LIKE CONCAT('%', #{regstId}, '%') 
+			        </if>
+			        ORDER BY A.RGSR_DTTM DESC
+					<include refid= "COMMON_PAGING_TAIL"/>
+				) V,	
+				(select @rownum:=0) R 
+    </select>
+    
+    <!-- selectBoardListCnt - 게시물 목록 내용 카운트-->
+    <select id="selectBoardListCnt" resultType="com.techboard.vo.board.BoardVO" parameterType="com.techboard.vo.board.BoardVO">
+		/** selectBoardListCnt- 게시물 목록 내용 카운트 **/
+		SELECT	COUNT(*)	AS boardCnt
+		FROM 	tb_board A
+		,		tb_board_kind B
+		WHERE	A.BOARD_KIND_CODE = B.BOARD_KIND_CODE
+		AND		A.USE_YN = 'Y'
+		AND		B.USE_YN = 'Y'
+		<if test=" null != boardKindName and !(''.equals(boardKindName))">
+        AND 	B.BOARD_KIND_NAME LIKE CONCAT('%', UPPER(#{boardKindName}), '%') 
+        </if>
+        <if test="null != boardTitle and !(''.equals(boardTitle))">
+	    AND 	A.BOARD_TITLE LIKE CONCAT('%', #{boardTitle}, '%') 
+        </if>
+        <if test="null != boardCn and !(''.equals(boardCn))">
+        AND 	A.BOARD_CN LIKE CONCAT('%', #{boardCn}, '%') 
+        </if>
+        <if test="null != regstId and !(''.equals(regstId))">
+        AND 	A.REGST_ID LIKE CONCAT('%', #{regstId}, '%') 
+        </if>
+        ORDER BY A.RGSR_DTTM DESC
+    </select>
+    <!-- insertBoardItem - 게시물 등록-->
+    <insert id="insertBoardItem" parameterType="com.techboard.vo.board.BoardVO">
+    	/** insertBoardItem 게시물 등록 **/
+    	INSERT INTO tb_board(
+    			BOARD_ID
+    		,	BOARD_KIND_CODE
+    		,	BOARD_TITLE
+    		,	BOARD_CN
+    		,	USE_YN
+    		,	REGST_ID
+    		,	APLC_ID
+    		,	RQST_DTTM
+    		,	RGSR_DTTM
+    		,	RQST_TP_CD
+    		,	ADD_DESC_CN
+    		, 	QRY_CNT
+    	) 
+    	SELECT 	CONCAT('B', LPAD(COUNT(board_id)+1, 4, '0'))
+    		,	#{boardKindCode}
+    		,	#{boardTitle}
+    		,	#{boardCn}
+    		,	'Y'
+    		,	#{regstId}
+    		,	NULL
+    		,	NULL
+    		,	date_format(sysdate(), '%Y%m%d%H%i%s')
+    		,	'01'
+    		,	#{addDescCn}
+    		, 	0
+		FROM	TB_BOARD
+    </insert>
+    
+    <!-- selectBoardItemDetail - 게시물 상세 조회-->
+    <select id="selectBoardItemDetail" resultType="com.techboard.vo.board.BoardVO" parameterType="com.techboard.vo.board.BoardVO">
+    	/** selectBoardItemDetail - 게시물 상세 조회 **/
+    	SELECT	A.BOARD_ID			AS boardId
+    	,		A.BOARD_KIND_CODE	AS boardKindCode
+        ,		B.BOARD_KIND_NAME	AS boardKindName
+	    ,		A.BOARD_TITLE		AS boardTitle
+	    ,		A.BOARD_CN			AS boardCn
+	    ,		A.APLC_ID			AS aplcId
+	    ,		A.REGST_ID			AS regstId
+		,		DATE_FORMAT(A.RQST_DTTM, '%Y-%m-%d')	AS rqstDttm
+	    ,		DATE_FORMAT(A.RGSR_DTTM, '%Y-%m-%d')	AS rgsrDttm
+	    ,		A.RQST_TP_CD		AS rqstTpCd
+	    ,		A.ADD_DESC_CN		AS addDecCn
+	    ,		A.QRY_CNT			AS qryCnt
+		FROM 	tb_board A
+		,		tb_board_kind B
+		WHERE	A.BOARD_KIND_CODE = B.BOARD_KIND_CODE
+		AND		A.USE_YN = 'Y'
+		AND 	B.USE_YN = 'Y'
+		AND		A.BOARD_ID = #{boardId}
+    </select>
+    
+    <!-- updateBoardItemCnt - 게시물 조회수 증가 -->
+    <update id="updateBoardItemCnt" parameterType="com.techboard.vo.board.BoardVO">
+    	/** updateBoardItemCnt 게시물 조회수 증가 **/
+	    UPDATE 	tb_board
+		SET 	QRY_CNT = IFNULL(QRY_CNT+1, 0)
+		WHERE	BOARD_ID = #{boardId}
+    </update>
+
+    <!-- updateBoardItem - 게시물 수정 -->
+    <update id="updateBoardItem" parameterType="com.techboard.vo.board.BoardVO">
+    	/** updateBoardItem 게시물 수정 **/
+	    UPDATE 	tb_board
+		SET		BOARD_KIND_CODE = #{boardKindCode}
+		,		BOARD_TITLE = #{boardTitle}
+		,		BOARD_CN = #{boardCn}
+		,		ADD_DESC_CN = #{addDescCn}
+		WHERE	BOARD_ID = #{boardId}
+    </update>
+    
+    <!-- deleteBoardItem - 게시물 삭제 -->
+    <update id="deleteBoardItem" parameterType="com.techboard.vo.board.BoardVO">
+    	/** deleteBoardItem 게시물 삭제 **/
+	    UPDATE 	tb_board
+		SET		USE_YN = 'N'
+		WHERE	BOARD_ID = #{boardId}
+    </update>
+    
+    
+    
+    
+</mapper>
