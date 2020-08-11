@@ -130,10 +130,10 @@
 			</table>
 		</form>
 		<div class="btn-group pull-right">
+			<button class="btn btn-success" type="button" id="cmpInfoOfferInsertBtn">등록</button>
 			<a>
 				<button class="btn btn-danger" type="button" id='cmpInfoCancleBtn'>취소</button>
 			</a>
-			<button class="btn btn-success" type="button" id="cmpInfoOfferInsertBtn">등록</button>
 		</div>
 	</div>
 </div>

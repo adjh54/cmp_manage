@@ -178,13 +178,13 @@
 					<tr>
 						<th class="text-center">면접 대비 정보</th>
 						<td colspan="2">
-							<textarea class="form-control" rows="10" id="cmpInterviewPrepareInfo" name="cmpInterviewPrepareInfo">${item.cmpInterviewPrepareInfo}</textarea>
+							<textarea class="form-control" rows="15" id="cmpInterviewPrepareInfo" name="cmpInterviewPrepareInfo">${item.cmpInterviewPrepareInfo}</textarea>
 						</td>
 					</tr>
 					<tr>
 						<th class="text-center">면접 후기 정보</th>
 						<td colspan="2">
-							<textarea class="form-control" rows="10" id="cmpInterviewReviewInfo" name="cmpInterviewReviewInfo">${item.cmpInterviewReviewInfo}</textarea>
+							<textarea class="form-control" rows="15" id="cmpInterviewReviewInfo" name="cmpInterviewReviewInfo">${item.cmpInterviewReviewInfo}</textarea>
 						</td>
 					</tr>
 				</tbody>

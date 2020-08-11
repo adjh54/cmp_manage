@@ -5,7 +5,7 @@
 $(function(){
 	
 	// 초기 선택 값을 '회사명'으로 설정
-	$("#searchKeyword option:eq(1)").attr("selected","selected");
+	//$("#searchKeyword option:eq(1)").attr("selected","selected");
 	
 	/*
 	 * 게시글 검색 기능
@@ -219,65 +219,75 @@ $(function(){
 		
     });
     
+    $('#searchReset').on("click", function(e){
+    	$("#type1Chk").prop("checked", true);
+    	
+    	// 활성화
+		$('#type1SearchKeyword').attr("disabled", false);
+		$('#type1SearchKeyContent').attr("disabled", false);
+		
+		// 비 활성화
+		$('#type2SearchKeyword').attr("disabled", true);
+		$('#type2SearchKeyContent').attr("disabled", true);
+		$('#type3SearchKeyword').attr("disabled", true);
+		$('#type3SearchKeyContent').attr("disabled", true);
+		
+    	$('#type1SearchKeyword option:eq(0)').prop("selected", true);
+		$('#type1SearchKeyContent').val("");
+		$('#type2SearchKeyword option:eq(0)').prop("selected", true);
+		$('#type2SearchKeyContent option:eq(0)').prop("selected", true);
+		$('#type3SearchKeyword option:eq(0)').prop("selected", true);
+		$('#type3SearchKeyContent option:eq(0)').prop("selected", true);
+    });
+    
+    
     /*
-     * 공고유형 / 지원상태 검색 기능
+     * 선택적 조회 기능
      */
-    $("#searchKeyword").on('change', function(e){
+    $("input[name=searchKeywordChk").on("click", function(e){
+    	var type = $(this).val();
     	
-    	var selectedVal = $(this).val();
-    	
-    	if("cmpRecuritKind" == selectedVal || "cmpApplyYn" == selectedVal || "cmpGoodYn" == selectedVal){
+    	if("type1" == type){
+    		// 활성화
+    		$('#type1SearchKeyword').attr("disabled", false);
+    		$('#type1SearchKeyContent').attr("disabled", false);
     		
-    		$('#searchKeywordNext').attr("disabled", false);
-    		$('#searchKeywordNext').attr("name", "searchContent");
-    		$('#searchContent').attr("disabled", true);
+    		// 비 활성화
+    		$('#type2SearchKeyword').attr("disabled", true);
+    		$('#type2SearchKeyContent').attr("disabled", true);
+    		$('#type3SearchKeyword').attr("disabled", true);
+    		$('#type3SearchKeyContent').attr("disabled", true);
     		
-    		var appendCheckVal = $('#searchKeywordNext option:eq(1)').val()
-
-    		if("cmpRecuritKind" == selectedVal){
-    			
-    			if( "" != appendCheckVal ){
-    				$("#searchKeywordNext option:eq(1)").remove();
-    				$("#searchKeywordNext option:eq(2)").remove();
-    				$("#searchKeywordNext option:eq(3)").remove();
-    				$("#searchKeywordNext option:eq(4)").remove();
-    				
-    			}
-    			$("#searchKeywordNext option:eq(0)").after("<option value='1'>사람인</option>");
-    			$("#searchKeywordNext option:eq(1)").after("<option value='2'>잡코리아</option>");
-    			$("#searchKeywordNext option:eq(2)").after("<option value='3'>헤드헌터</option>");
-    			$("#searchKeywordNext option:eq(3)").after("<option value='4'>인사담당자</option>");
-    		}
-    		else if("cmpApplyYn" == selectedVal){
-
-    			if( "" != appendCheckVal){
-    				$("#searchKeywordNext option:eq(1)").remove();
-    				$("#searchKeywordNext option:eq(2)").remove();
-        			$("#searchKeywordNext option:eq(3)").remove();
-        			$("#searchKeywordNext option:eq(4)").remove();
-    			}
-    			
-    			$("#searchKeywordNext option:eq(0)").after("<option value='Y'>지원</option>");
-    			$("#searchKeywordNext option:eq(1)").after("<option value='N'>미지원</option>");
-    		}
-    		else if("cmpGoodYn" == selectedVal){
-    			if( "" != appendCheckVal){
-    				$("#searchKeywordNext option:eq(1)").remove();
-    				$("#searchKeywordNext option:eq(2)").remove();
-        			$("#searchKeywordNext option:eq(3)").remove();
-        			$("#searchKeywordNext option:eq(4)").remove();
-    			}
-    			$("#searchKeywordNext option:eq(0)").after("<option value='Y'>좋아요</option>");
-    			$("#searchKeywordNext option:eq(1)").after("<option value='N'>안좋아요</option>");
-    		}
-    		else {
-    		$('#searchKeywordNext').attr("disabled", true);
-    		$('#searchContent').attr("disabled", false);
-    		}
+    	}
+    	else if("type2" == type){
+    		// 활성화
+    		$('#type2SearchKeyword').attr("disabled", false);
+    		$('#type2SearchKeyContent').attr("disabled", false);
+    		
+    		// 비 활성화
+    		$('#type1SearchKeyword').attr("disabled", true);
+    		$('#type1SearchKeyContent').attr("disabled", true);
+    		$('#type3SearchKeyword').attr("disabled", true);
+    		$('#type3SearchKeyContent').attr("disabled", true);
+    	}
     	
+    	if("type3" == type){
+    		// 활성화
+    		$('#type3SearchKeyword').attr("disabled", false);
+    		$('#type3SearchKeyContent').attr("disabled", false);
+    		
+    		// 비 활성화
+    		$('#type1SearchKeyword').attr("disabled", true);
+    		$('#type1SearchKeyContent').attr("disabled", true);
+    		$('#type2SearchKeyword').attr("disabled", true);
+    		$('#type2SearchKeyContent').attr("disabled", true);
     	}
     
     });
+    
+    $("#cmpInfoDownload").on('click', function(e){
+    	alert("다운로드 기능 구현 예정");
+    })
 
 });
 

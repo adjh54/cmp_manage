@@ -250,8 +250,6 @@
 						</td>
 					</tr>
 					
-					
-					
 					<tr>
 						<th class="text-center">
 							<label for="cmpComment">
@@ -265,17 +263,18 @@
 				</tbody>
 			</table>
 		</form>
-		<div class="btn-group pull-right">
+		<div class="input-group pull-right">
+			<button class="btn btn-success" type="button" id= "cmpInfoInsertBtn">
+				<c:out value="등록"/>
+			</button>
+		
 			<a>
 				<button class="btn btn-danger" type="button" id='cmpInfoCancleBtn'>
 					<c:out value="취소"/>
 				</button>
 			</a>
-			&nbsp;
-			<button class="btn btn-success" type="button" id= "cmpInfoInsertBtn">
-				<c:out value="등록"/>
-			</button>
 		</div>
+			
 	</div>
 </div>
 

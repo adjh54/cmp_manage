@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,15 +42,24 @@ public class CmpInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/cmpInfoList")
-	public ModelAndView cmpInfoList(CmpInfoVO cmpInfoVo, @RequestParam(defaultValue="1") int curPage) {
+	public ModelAndView cmpInfoList(CmpInfoVO cmpInfoVo, 
+			@RequestParam(defaultValue="1") int curPage, 
+			@ModelAttribute("searchKeyword") String searchKeyword, 
+			@ModelAttribute("searchContent") String searchContent ) {
+		
 		ModelAndView mv = new ModelAndView();
-		LOGGER.info("Jonghoon CmpInfoList Start>>>>>>>>>>>");
-		LOGGER.info("limit/offset"+ cmpInfoVo.getLimit() +"//////"+ cmpInfoVo.getOffset());
-
-			// 검색어 처리 
-			if(null != cmpInfoVo.getSearchContent() || !("".equals(cmpInfoVo.getSearchContent())) ) {
-				cmpInfoVo = this.checkSearchFnc(cmpInfoVo);		// 검색어 처리 Method
+		LOGGER.info("CmpInfoList Start>>>>>>>>>>>");
+		
+		// 검색어 처리 
+		if(null != searchContent || !("".equals(searchContent)) ) {
+			
+			cmpInfoVo = this.checkSearchFnc(mv, cmpInfoVo, searchKeyword, searchContent);		// 검색어 처리 Method
+			
+			// 회사명 || 회사위치 일 경우만 값을 유지
+			if ( "cmpTitle".equals(searchKeyword) || "cmpLocation".equals(searchKeyword) ) {
+				mv.addObject("searchKeyword", searchKeyword);
 			}
+		}
 		
 		try {
 			CmpInfoVO cmpInfoListCnt = cmpInfoService.selectCmpInfoListCnt(cmpInfoVo);
@@ -351,21 +361,20 @@ public class CmpInfoController {
 	 * @param boardVo
 	 * @return
 	 */
-	public CmpInfoVO checkSearchFnc(CmpInfoVO cmpInfoVo) {
-		
-		String keyword = cmpInfoVo.getSearchKeyword();		// Keyword
-		String content = cmpInfoVo.getSearchContent();		// 내용
+	public CmpInfoVO checkSearchFnc(ModelAndView mv, CmpInfoVO cmpInfoVo, String keyword, String content) {
 		
 		switch (keyword) {
 		
 		// 회사명
 		case "cmpTitle":
 			cmpInfoVo.setCmpTitle(content);
+			mv.addObject("searchContent", content);
 			break;
 		
 		// 회사 위치
 		case "cmpLocation":
 			cmpInfoVo.setCmpLocation(content);
+			mv.addObject("searchContent", content);
 			break;
 		
 		// 공고 유형
@@ -384,7 +393,7 @@ public class CmpInfoController {
 			break;
 			
 		default:
-			LOGGER.info("Swtich Error");
+			break;
 		}
 		
 		return cmpInfoVo;
