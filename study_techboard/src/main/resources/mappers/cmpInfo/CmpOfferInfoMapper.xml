@@ -7,124 +7,129 @@
 
 	<!-- 페이징 적용 상단 -->
 	<sql id="COMMON_OFFER_PAGING_HEADER">
-	SELECT R1.* FROM (
+		SELECT R1.* FROM (
 	</sql>
 	
 	<!-- 페이징 적용 하단 -->
 	<sql id="COMMON_OFFER_PAGING_TAIL">
 		) R1
-		<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
-		LIMIT #{startIndex}, #{pageSize}
-		</if>
 	</sql>
 	
     <!-- cmpOfferInfoList - 회사 제안 정보 목록 조회 -->
     <select id="cmpOfferInfoList" resultType="com.techboard.vo.cmpInfo.CmpInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpInfoVO">
 		/** selectCmpInfoList- 회사 제안 정보 목록 조회  **/
-		SELECT 	@rownum:=@rownum+1	AS rownum
-			,	V.*
+		SELECT 	C.*
 		FROM	(
-					<include refid="COMMON_OFFER_PAGING_HEADER"/>
-					SELECT 	A.CMP_NO					AS 	cmpNo
-						,	A.CMP_TITLE					AS 	cmpTitle
-					    ,	A.CMP_LOCATION				AS 	cmpLocation	
-					    ,	A.CMP_FOUNDED_YEAR			AS 	cmpFoundedYear
-					    ,	DATE_FORMAT(sysdate(), '%Y') - A.CMP_FOUNDED_YEAR AS foundedYear
-					    ,	FORMAT(A.CMP_EMP_CNT, 0)	AS 	cmpEmpCnt
-					    ,	FORMAT(A.CMP_TOUCH, 0)		AS 	cmpTouch
-					    ,	A.CMP_KIND					AS 	cmpKind
-					    ,	A.CMP_DEADLINE_DTTM			AS 	cmpDeadlineDttm
-					    , 	DATEDIFF(A.CMP_DEADLINE_DTTM, DATE_FORMAT(sysdate(), '%Y-%m-%d')) AS deadlineDay
-					    ,	A.CMP_JOB_POSITION			AS 	cmpJobPosition
-					    ,	A.CMP_JOB_RESPONSE			AS 	cmpJobResponse
-					    ,	A.CMP_JOB_QUALIFICATION		AS 	cmpJobQualification
-					    ,	A.CMP_JOB_PREFER			AS 	cmpJobPrefer
-					    ,	A.CMP_WAREFARE				AS 	cmpWareFare
-					    ,	A.CMP_COMMENT				AS 	cmpComment
-					    ,	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d')	AS 	regDttm
-					    ,	CASE WHEN DAYOFWEEK(A.REG_DTTM) = 1 THEN '일'
-                            WHEN DAYOFWEEK(A.REG_DTTM) = 2 THEN '월'
-                            WHEN DAYOFWEEK(A.REG_DTTM) = 3 THEN '화'
-                            WHEN DAYOFWEEK(A.REG_DTTM) = 4 THEN '수'
-                            WHEN DAYOFWEEK(A.REG_DTTM) = 5 THEN '목'
-                            WHEN DAYOFWEEK(A.REG_DTTM) = 6 THEN '금'
-                            WHEN DAYOFWEEK(A.REG_DTTM) = 7 THEN '토'END AS regDayOfWeek
-						,	A.MOD_DTTM					AS 	modeDttm
-					    ,	A.USE_YN					AS 	useYn
-					    ,	A.CMP_APPLY_YN				AS 	cmpApplyYn
-					    ,	A.CMP_INCEDENCE_RATE		AS 	cmpIncedenceRate
-					    ,	A.CMP_RESIGNATION_RATE		AS 	cmpResignationRate
-					    ,	A.CMP_RECURIT_URL			AS 	cmpRecuritUrl
-					    ,	A.CMP_HOMEPAGE_URL			AS 	cmpHomepageUrl
-					    ,	A.CMP_PROGRAMMER_KIND		AS 	cmpProgrammerKind
-					    , 	A.CMP_FAVORITES_YN			AS 	cmpFavoritesYn
-					    , 	A.CMP_GOOD_YN				AS 	cmpGoodYn
-					    , 	A.CMP_RECURIT_KIND			AS 	cmpRecuritKind
-					    ,	A.CMP_RECURIT_PROCESS		AS 	cmpRecuritProcess
-					    , 	A.CMP_REPLY_YN				AS 	cmpReplyYn
-					    ,	A.CMP_BLOCK_YN				AS 	cmpBlockYn
-					FROM	TB_CMP_INFO A
-					WHERE	1=1
-					AND		A.CMP_OFFER_YN = 'Y'
-					<if test="null != cmpTitle and !(''.equals(cmpTitle))">
-			        AND 	A.CMP_TITLE LIKE CONCAT('%', #{cmpTitle}, '%') 
-			        </if>
-					<if test="null != cmpLocation and !(''.equals(cmpLocation))">
-			        AND 	A.CMP_LOCATION LIKE CONCAT('%', #{cmpLocation}, '%') 
-			        </if>
-					<if test="null != cmpRecuritKind and !(''.equals(cmpRecuritKind))">
-			        AND 	A.CMP_RECURIT_KIND = #{cmpRecuritKind} 
-			        </if>
-					<if test="null != cmpApplyYn and !(''.equals(cmpApplyYn))">
-			        AND 	A.CMP_APPLY_YN = #{cmpApplyYn}
-			        </if>
-					 <if test="null != regDttm and !(''.equals(regDttm))">
-			        AND 	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d') BETWEEN #{regDttm} AND #{regDttmEnd}
-			        </if>
-			        ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC 
-			         <if test='"Y" eq orderingFlag'>
-			        	, ${orderKind} ${ordering}
-			        </if>
-			        ,A.REG_DTTM DESC
-					<include refid= "COMMON_OFFER_PAGING_TAIL"/>
-				) V,	
-				(select @rownum:=0) R 
+			SELECT 	@rownum := @rownum + 1	AS rownum,	V.*
+			FROM	(
+						<include refid="COMMON_OFFER_PAGING_HEADER"/>
+						SELECT 	A.CMP_NO					AS 	cmpNo
+							,	A.CMP_TITLE					AS 	cmpTitle
+						    ,	A.CMP_LOCATION				AS 	cmpLocation	
+						    ,	A.CMP_FOUNDED_YEAR			AS 	cmpFoundedYear
+						    ,	DATE_FORMAT(sysdate(), '%Y') - A.CMP_FOUNDED_YEAR AS foundedYear
+						    ,	FORMAT(A.CMP_EMP_CNT, 0)	AS 	cmpEmpCnt
+						    ,	FORMAT(A.CMP_TOUCH, 0)		AS 	cmpTouch
+						    ,	A.CMP_KIND					AS 	cmpKind
+						    ,	A.CMP_DEADLINE_DTTM			AS 	cmpDeadlineDttm
+						    , 	DATEDIFF(A.CMP_DEADLINE_DTTM, DATE_FORMAT(sysdate(), '%Y-%m-%d')) AS deadlineDay
+						    ,	A.CMP_JOB_POSITION			AS 	cmpJobPosition
+						    ,	A.CMP_JOB_RESPONSE			AS 	cmpJobResponse
+						    ,	A.CMP_JOB_QUALIFICATION		AS 	cmpJobQualification
+						    ,	A.CMP_JOB_PREFER			AS 	cmpJobPrefer
+						    ,	A.CMP_WAREFARE				AS 	cmpWareFare
+						    ,	A.CMP_COMMENT				AS 	cmpComment
+						    ,	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d')	AS 	regDttm
+						    ,	CASE WHEN DAYOFWEEK(A.REG_DTTM) = 1 THEN '일'
+	                            WHEN DAYOFWEEK(A.REG_DTTM) = 2 THEN '월'
+	                            WHEN DAYOFWEEK(A.REG_DTTM) = 3 THEN '화'
+	                            WHEN DAYOFWEEK(A.REG_DTTM) = 4 THEN '수'
+	                            WHEN DAYOFWEEK(A.REG_DTTM) = 5 THEN '목'
+	                            WHEN DAYOFWEEK(A.REG_DTTM) = 6 THEN '금'
+	                            WHEN DAYOFWEEK(A.REG_DTTM) = 7 THEN '토'END AS regDayOfWeek
+							,	A.MOD_DTTM					AS 	modeDttm
+						    ,	A.USE_YN					AS 	useYn
+						    ,	A.CMP_APPLY_YN				AS 	cmpApplyYn
+						    ,	A.CMP_INCEDENCE_RATE		AS 	cmpIncedenceRate
+						    ,	A.CMP_RESIGNATION_RATE		AS 	cmpResignationRate
+						    ,	A.CMP_RECURIT_URL			AS 	cmpRecuritUrl
+						    ,	A.CMP_HOMEPAGE_URL			AS 	cmpHomepageUrl
+						    ,	A.CMP_PROGRAMMER_KIND		AS 	cmpProgrammerKind
+						    , 	A.CMP_FAVORITES_YN			AS 	cmpFavoritesYn
+						    , 	A.CMP_GOOD_YN				AS 	cmpGoodYn
+						    , 	A.CMP_RECURIT_KIND			AS 	cmpRecuritKind
+						    ,	A.CMP_RECURIT_PROCESS		AS 	cmpRecuritProcess
+						    , 	A.CMP_REPLY_YN				AS 	cmpReplyYn
+						    ,	A.CMP_BLOCK_YN				AS 	cmpBlockYn
+						FROM	TB_CMP_INFO A
+						WHERE	1=1
+						AND		A.CMP_OFFER_YN = 'Y'
+						<if test="null != cmpTitle and !(''.equals(cmpTitle))">
+				        AND 	A.CMP_TITLE LIKE CONCAT('%', #{cmpTitle}, '%') 
+				        </if>
+						<if test="null != cmpLocation and !(''.equals(cmpLocation))">
+				        AND 	A.CMP_LOCATION LIKE CONCAT('%', #{cmpLocation}, '%') 
+				        </if>
+						<if test="null != cmpRecuritKind and !(''.equals(cmpRecuritKind))">
+				        AND 	A.CMP_RECURIT_KIND = #{cmpRecuritKind} 
+				        </if>
+						<if test="null != cmpApplyYn and !(''.equals(cmpApplyYn))">
+				        AND 	A.CMP_APPLY_YN = #{cmpApplyYn}
+				        </if>
+						 <if test="null != regDttm and !(''.equals(regDttm))">
+				        AND 	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d') BETWEEN #{regDttm} AND #{regDttmEnd}
+				        </if>
+				        ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC 
+				         <if test='"Y" eq orderingFlag'>
+				        	, ${orderKind} ${ordering}
+				        </if>
+				        ,A.REG_DTTM DESC
+						<include refid= "COMMON_OFFER_PAGING_TAIL"/>
+					) V, (select @rownum := 0) R 
+				) C
+				<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
+				LIMIT #{startIndex}, #{pageSize}
+				</if>
     </select>
     
     <!-- cmpOfferInfoListCnt - 회사 제안 정보 목록 내용 카운트-->
     <select id="cmpOfferInfoListCnt" resultType="com.techboard.vo.cmpInfo.CmpInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpInfoVO">
 		/** cmpOfferInfoListCnt- 회사 제안 정보 목록 카운트 **/
-		SELECT 	@rownum:=@rownum+1	AS rownum
-			,	V.*
+		SELECT 	C.*
 		FROM	(
-					<include refid="COMMON_OFFER_PAGING_HEADER"/>
-			SELECT	COUNT(*)	AS cmpOfferInfoCnt
-			FROM 	TB_CMP_INFO A
-			WHERE	1=1
-			AND		A.CMP_OFFER_YN = 'Y'
-			<if test="null != cmpTitle and !(''.equals(cmpTitle))">
-	        AND 	A.CMP_TITLE LIKE CONCAT('%', #{cmpTitle}, '%') 
-	        </if>
-			<if test="null != cmpLocation and !(''.equals(cmpLocation))">
-	        AND 	A.CMP_LOCATION LIKE CONCAT('%', #{cmpLocation}, '%') 
-	        </if>
-			<if test="null != cmpRecuritKind and !(''.equals(cmpRecuritKind))">
-	        AND 	A.CMP_RECURIT_KIND = #{cmpRecuritKind} 
-	        </if>
-			<if test="null != cmpApplyYn and !(''.equals(cmpApplyYn))">
-	        AND 	A.CMP_APPLY_YN = #{cmpApplyYn}
-	        </if>
-	        <if test="null != regDttm and !(''.equals(regDttm))">
-	        AND 	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d') BETWEEN #{regDttm} AND #{regDttmEnd}
-	        </if>
-	        ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC 
-			         <if test='"Y" eq orderingFlag'>
-			        	, ${orderKind} ${ordering}
-			        </if>
-			        ,A.REG_DTTM DESC
-					<include refid= "COMMON_OFFER_PAGING_TAIL"/>
-				) V,	
-				(select @rownum:=0) R 
+			SELECT 	@rownum := @rownum + 1	AS rownum,	V.*
+			FROM	(
+						<include refid="COMMON_OFFER_PAGING_HEADER"/>
+				SELECT	COUNT(*)	AS cmpOfferInfoCnt
+				FROM 	TB_CMP_INFO A
+				WHERE	1=1
+				AND		A.CMP_OFFER_YN = 'Y'
+				<if test="null != cmpTitle and !(''.equals(cmpTitle))">
+		        AND 	A.CMP_TITLE LIKE CONCAT('%', #{cmpTitle}, '%') 
+		        </if>
+				<if test="null != cmpLocation and !(''.equals(cmpLocation))">
+		        AND 	A.CMP_LOCATION LIKE CONCAT('%', #{cmpLocation}, '%') 
+		        </if>
+				<if test="null != cmpRecuritKind and !(''.equals(cmpRecuritKind))">
+		        AND 	A.CMP_RECURIT_KIND = #{cmpRecuritKind} 
+		        </if>
+				<if test="null != cmpApplyYn and !(''.equals(cmpApplyYn))">
+		        AND 	A.CMP_APPLY_YN = #{cmpApplyYn}
+		        </if>
+		        <if test="null != regDttm and !(''.equals(regDttm))">
+		        AND 	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d') BETWEEN #{regDttm} AND #{regDttmEnd}
+		        </if>
+		        ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC 
+				         <if test='"Y" eq orderingFlag'>
+				        	, ${orderKind} ${ordering}
+				        </if>
+				        ,A.REG_DTTM DESC
+						<include refid= "COMMON_OFFER_PAGING_TAIL"/>
+					) V, (select @rownum:=0) R 
+				) C
+				<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
+				LIMIT #{startIndex}, #{pageSize}
+				</if>
     </select>
     
     <!-- cmpOfferInfoDetail - 회사 제안정보 상세 조회-->

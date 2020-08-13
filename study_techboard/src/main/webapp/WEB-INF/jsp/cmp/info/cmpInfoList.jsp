@@ -94,27 +94,26 @@
 					<tr class="bg-light">
 						<th class="text-center" colspan="9">
 							<div class="input-group pull-left">
-								<a>
+								<div class="input-control">
 									<button class="btn btn-sm" type ="button" id="cmpInfoDownload">
 										<c:out value="엑셀 다운로드"/>
 									</button>
-								</a>
+								</div>
 							</div>
 
-							<div class="input-control pull-right">
-								<select class="form-control" id="kindOrdering">
-									<option value="REG_DTTM">최신순</option>
-									<option value="CMP_TITLE">이름순</option>
-									<option value="CMP_RECURIT_KIND">공고유형순</option>
-									<option value="CMP_DEADLINE_DTTM">마감일자순</option>
-								</select>
-							</div>
-							<div class="input-control pull-right">
-								<select class="form-control" id="collectListPage">
+							<div class="input-group pull-right">
+								<select class="input-control" style="height: 30px;" id="collectListPage">
 									<option value="10">10개씩 보기</option>
 									<option value="20">20개씩 보기</option>
 									<option value="50">50개씩 보기</option>
 									<option value="100">100개씩 보기</option>
+								</select>
+								&nbsp;
+								<select class="input-control" style="height: 30px;" id="kindOrdering" >
+									<option value="REG_DTTM">최신순</option>
+									<option value="CMP_TITLE">이름순</option>
+									<option value="CMP_RECURIT_KIND">공고유형순</option>
+									<option value="CMP_DEADLINE_DTTM">마감일자순</option>
 								</select>
 							</div>
 						</th>

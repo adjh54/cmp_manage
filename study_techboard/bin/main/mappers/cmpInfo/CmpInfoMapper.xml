@@ -7,21 +7,19 @@
 
 	<!-- 페이징 적용 상단 -->
 	<sql id="COMMON_PAGING_HEADER">
-	SELECT R1.* FROM (
+		SELECT R1.* FROM (
 	</sql>
 	
 	<!-- 페이징 적용 하단 -->
 	<sql id="COMMON_PAGING_TAIL">
 		) R1
-		<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
-		LIMIT #{startIndex}, #{pageSize}
-		</if>
 	</sql>
 	
-
 	<!-- selectCmpInfoList - 회사 정보 목록 조회 -->
     <select id="selectCmpInfoList" resultType="com.techboard.vo.cmpInfo.CmpInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpInfoVO">
-		/** selectCmpInfoList- 회사 정보 목록 조회  **/
+	/** selectCmpInfoList- 회사 정보 목록 조회  **/
+	SELECT 	C.*
+	FROM	(	
 		SELECT 	@rownum:=@rownum+1	AS rownum
 			,	V.*
 		FROM	(
@@ -81,12 +79,18 @@
 			        , A.CMP_DEADLINE_DTTM ASC
 					<include refid= "COMMON_PAGING_TAIL"/>
 				) V,	
-				(select @rownum:=0) R 
+				(select @rownum:=0) R
+			) C
+			<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
+				LIMIT #{startIndex}, #{pageSize}
+			</if>
     </select>
     
     <!-- selectCmpInfoCnt - 회사 정보 목록 내용 카운트-->
     <select id="selectCmpInfoListCnt" resultType="com.techboard.vo.cmpInfo.CmpInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpInfoVO">
-		/** selectBoardListCnt- 회사 정보 목록 카운트 **/
+	/** selectBoardListCnt- 회사 정보 목록 카운트 **/
+	SELECT 	C.*
+	FROM	(	
 		SELECT 	@rownum:=@rownum+1	AS rownum
 			,	V.*
 		FROM	(
@@ -115,9 +119,13 @@
 	        	, ${orderKind} ${ordering}
 	        </if>
 	        , A.CMP_DEADLINE_DTTM ASC
-        <include refid= "COMMON_PAGING_TAIL"/>
+        	<include refid= "COMMON_PAGING_TAIL"/>
 			) V,	
-		(select @rownum:=0) R 
+		(select @rownum:=0) R
+		) C
+		<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
+			LIMIT #{startIndex}, #{pageSize}
+		</if>
     </select>
 	
 	<!-- cmpInfoInsert - 회사정보 등록-->

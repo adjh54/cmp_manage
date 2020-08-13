@@ -7,20 +7,17 @@
 
 	<!-- 페이징 적용 상단 -->
 	<sql id="COMMON_PAGING_HEADER">
-	SELECT R1.* FROM (
+		SELECT R1.* FROM (
 	</sql>
 	
 	<!-- 페이징 적용 하단 -->
 	<sql id="COMMON_PAGING_TAIL">
 		) R1
-		<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
-		LIMIT #{startIndex}, #{pageSize}
-		</if>
 	</sql>
 	
     <!-- cmpApplyInfoInsert - 회사지원하기 - 회사_지원 테이블 등록 -->
     <insert id="cmpApplyInfoInsert" parameterType="com.techboard.vo.cmpInfo.CmpApplyInfoVO">
-    	/** cmpApplyInfoInsert - 회사지원하기 - 회사_지원 테이블 등록 **/
+    /** cmpApplyInfoInsert - 회사지원하기 - 회사_지원 테이블 등록 **/
     	INSERT INTO TB_CMP_APPLY_INFO(
 				CMP_APPLY_NO
 			,	CMP_NO
@@ -67,7 +64,9 @@
 	
 	<!-- cmpApplyInfoList - 회사 지원 정보 목록 조회 -->
     <select id="cmpApplyInfoList" resultType="com.techboard.vo.cmpInfo.CmpApplyInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpApplyInfoVO">
-		/** cmpApplyInfoList- 회사 지원 정보 목록 조회  **/
+	/** cmpApplyInfoList- 회사 지원 정보 목록 조회  **/
+	SELECT 	C.*
+	FROM	(	
 		SELECT 	@rownum:=@rownum+1	AS rownum
 			,	V.*
 		FROM	(
@@ -157,6 +156,10 @@
 					<include refid= "COMMON_PAGING_TAIL"/>
 				) V,	
 				(select @rownum:=0) R 
+			) C
+		<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
+			LIMIT #{startIndex}, #{pageSize}
+		</if>
     </select>
     
     <!-- cmpApplyInfoListCnt - 회사 정보 목록 내용 카운트-->
