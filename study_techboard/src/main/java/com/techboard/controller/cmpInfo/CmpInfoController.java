@@ -44,6 +44,7 @@ public class CmpInfoController {
 	@RequestMapping(value = "/cmpInfoList")
 	public ModelAndView cmpInfoList(CmpInfoVO cmpInfoVo, 
 			@RequestParam(defaultValue="1") int curPage, 
+			@RequestParam(defaultValue="10") int pageSize, 
 			@ModelAttribute("searchKeyword") String searchKeyword, 
 			@ModelAttribute("searchContent") String searchContent ) {
 		
@@ -70,7 +71,7 @@ public class CmpInfoController {
 			Pagination pagination = new Pagination(cmpInfoCnt, curPage);
 	        
 	        cmpInfoVo.setStartIndex(pagination.getStartIndex());
-	        cmpInfoVo.setCntPerPage(pagination.getPageSize());
+	        cmpInfoVo.setCntPerPage(pageSize);
 			
 			List<CmpInfoVO> list = cmpInfoService.selectCmpInfoList(cmpInfoVo);
 			mv.addObject("cmpInfoList", list);

@@ -76,6 +76,33 @@
 			</colgroup>
 			
 			<thead>
+				<tr class="bg-light">
+						<th class="text-center" colspan="10">
+							<div class="input-group pull-left">
+								<a>
+									<button class="btn btn-sm" type ="button" id="cmpInfoDownload">
+										<c:out value="엑셀 다운로드"/>
+									</button>
+								</a>
+							</div>
+							<div class="input-control pull-right">
+								<select class="form-control" id="kindOrdering">
+									<option value="REG_DTTM">최신순</option>
+									<option value="CMP_TITLE">이름순</option>
+									<option value="CMP_RECURIT_KIND">공고유형순</option>
+								</select>
+							</div>
+							<div class="input-control pull-right">
+								<select class="form-control" id="collectListPage">
+									<option value="10">10개씩 보기</option>
+									<option value="20">20개씩 보기</option>
+									<option value="50">50개씩 보기</option>
+									<option value="100">100개씩 보기</option>
+								</select>
+							</div>
+						</th>
+					</tr>
+			
 				<tr class="bg-info">
 					<th class="text-center"><input type="checkbox" id="chkAll"/> </th>
 					<th class="text-center">번호</th>

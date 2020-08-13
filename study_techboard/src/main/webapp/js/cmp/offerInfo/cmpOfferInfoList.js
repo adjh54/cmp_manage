@@ -21,6 +21,45 @@ $(function(){
 		
 	});
 	
+	/**
+	 * 20개 / 50개 / 100개씩 묶어서 보기 기능
+	 * SELECT
+	 */
+	$("#collectListPage").on('change', function(e){
+	
+		var pageSize = $(this).val();
+		
+//		location.href = "/cmp/info/cmpInfoList?pageSize=" + pageSize;
+		
+		var inputTag = '<input type ="hidden" name="pageSize" value=' + pageSize + '>';
+		
+		$('#searchForm').append(inputTag);
+		
+		e.preventDefault(); // 내장된 이벤트를 차단하는 명령
+		$('#searchForm').attr('action', '/cmp/offerInfo/cmpOfferInfoList');
+		$('#searchForm').attr('method', 'POST');
+		$('#searchForm').attr('target', '_self')
+		$('#searchForm').submit();
+	});
+	
+	$("#kindOrdering").on("change", function(e){
+		var kind = "A."+$(this).val();
+
+		var orderKind = '<input type ="hidden" name="orderKind" value=' + kind + '>';
+		var ordering = '<input type ="hidden" name="ordering" value= "ASC">';
+		var orderingFlag = '<input type ="hidden" name="orderingFlag" value= "Y">';
+		
+		$('#searchForm').append(orderKind);
+		$('#searchForm').append(ordering);
+		$('#searchForm').append(orderingFlag);
+		
+		e.preventDefault(); // 내장된 이벤트를 차단하는 명령
+		$('#searchForm').attr('action', '/cmp/offerInfo/cmpOfferInfoList');
+		$('#searchForm').attr('method', 'POST');
+		$('#searchForm').attr('target', '_self')
+		$('#searchForm').submit();
+	})
+	
     /*
 	 * 게시판 글 삭제
 	 * UPDATE

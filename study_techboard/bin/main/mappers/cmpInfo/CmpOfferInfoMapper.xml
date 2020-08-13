@@ -81,7 +81,11 @@
 					 <if test="null != regDttm and !(''.equals(regDttm))">
 			        AND 	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d') BETWEEN #{regDttm} AND #{regDttmEnd}
 			        </if>
-			        ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC, A.REG_DTTM DESC
+			        ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC 
+			         <if test='"Y" eq orderingFlag'>
+			        	, ${orderKind} ${ordering}
+			        </if>
+			        ,A.REG_DTTM DESC
 					<include refid= "COMMON_OFFER_PAGING_TAIL"/>
 				) V,	
 				(select @rownum:=0) R 
@@ -90,26 +94,37 @@
     <!-- cmpOfferInfoListCnt - 회사 제안 정보 목록 내용 카운트-->
     <select id="cmpOfferInfoListCnt" resultType="com.techboard.vo.cmpInfo.CmpInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpInfoVO">
 		/** cmpOfferInfoListCnt- 회사 제안 정보 목록 카운트 **/
-		SELECT	COUNT(*)	AS cmpOfferInfoCnt
-		FROM 	TB_CMP_INFO A
-		WHERE	1=1
-		AND		A.CMP_OFFER_YN = 'Y'
-		<if test="null != cmpTitle and !(''.equals(cmpTitle))">
-        AND 	A.CMP_TITLE LIKE CONCAT('%', #{cmpTitle}, '%') 
-        </if>
-		<if test="null != cmpLocation and !(''.equals(cmpLocation))">
-        AND 	A.CMP_LOCATION LIKE CONCAT('%', #{cmpLocation}, '%') 
-        </if>
-		<if test="null != cmpRecuritKind and !(''.equals(cmpRecuritKind))">
-        AND 	A.CMP_RECURIT_KIND = #{cmpRecuritKind} 
-        </if>
-		<if test="null != cmpApplyYn and !(''.equals(cmpApplyYn))">
-        AND 	A.CMP_APPLY_YN = #{cmpApplyYn}
-        </if>
-        <if test="null != regDttm and !(''.equals(regDttm))">
-        AND 	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d') BETWEEN #{regDttm} AND #{regDttmEnd}
-        </if>
-         ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC, A.REG_DTTM DESC
+		SELECT 	@rownum:=@rownum+1	AS rownum
+			,	V.*
+		FROM	(
+					<include refid="COMMON_OFFER_PAGING_HEADER"/>
+			SELECT	COUNT(*)	AS cmpOfferInfoCnt
+			FROM 	TB_CMP_INFO A
+			WHERE	1=1
+			AND		A.CMP_OFFER_YN = 'Y'
+			<if test="null != cmpTitle and !(''.equals(cmpTitle))">
+	        AND 	A.CMP_TITLE LIKE CONCAT('%', #{cmpTitle}, '%') 
+	        </if>
+			<if test="null != cmpLocation and !(''.equals(cmpLocation))">
+	        AND 	A.CMP_LOCATION LIKE CONCAT('%', #{cmpLocation}, '%') 
+	        </if>
+			<if test="null != cmpRecuritKind and !(''.equals(cmpRecuritKind))">
+	        AND 	A.CMP_RECURIT_KIND = #{cmpRecuritKind} 
+	        </if>
+			<if test="null != cmpApplyYn and !(''.equals(cmpApplyYn))">
+	        AND 	A.CMP_APPLY_YN = #{cmpApplyYn}
+	        </if>
+	        <if test="null != regDttm and !(''.equals(regDttm))">
+	        AND 	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d') BETWEEN #{regDttm} AND #{regDttmEnd}
+	        </if>
+	        ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC 
+			         <if test='"Y" eq orderingFlag'>
+			        	, ${orderKind} ${ordering}
+			        </if>
+			        ,A.REG_DTTM DESC
+					<include refid= "COMMON_OFFER_PAGING_TAIL"/>
+				) V,	
+				(select @rownum:=0) R 
     </select>
     
     <!-- cmpOfferInfoDetail - 회사 제안정보 상세 조회-->
