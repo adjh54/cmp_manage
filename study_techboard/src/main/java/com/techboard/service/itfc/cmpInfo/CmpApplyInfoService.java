@@ -17,5 +17,7 @@ public interface CmpApplyInfoService {
 	public CmpApplyInfoVO cmpApplyInfoDetail(CmpApplyInfoVO cmpApplyInfoVo) throws Exception;
 	
 	public int cmpApplyInfoUpdate(CmpApplyInfoVO cmpApplyInfoVo) throws Exception;
+
+	public int cmpApplyInfoUpdateProcessCompleteYn(CmpApplyInfoVO cmpApplyInfoVo) throws Exception;
 	
 }

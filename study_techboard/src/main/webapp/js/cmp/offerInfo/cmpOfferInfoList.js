@@ -188,32 +188,32 @@ $(function(){
     	
     	
     	if(result){
-    		
-    	var cmpNoArr = [];
-    	
-    	$('input[name="cmpBatchReply"]').each(function(){
-    		if(this.checked){
-    			
-    			var cmpReplyYn = $(this).data('cmpreplyyn');
-    			// 회신하지 않은 상태만 복사
-    			if('N' == cmpReplyYn){
-    				var cmpNo = $(this).data('cmpno');
-        			cmpNoArr.push(cmpNo);
-    			}
-    			
-    		}
-    	});
-    	
-    	var formTag = '<form id="cmpReplyArrForm"></form>'
-		var inputTag = '<input type ="hidden" name="cmpNoArr" value=' + cmpNoArr + '>';
-		
-		$('body').append(formTag);
-		$('#cmpReplyArrForm').append(inputTag);
-
-		$('#cmpReplyArrForm').attr('action', '/cmp/offerInfo/cmpOfferInfoUpdateArrReplyYn');
-		$('#cmpReplyArrForm').attr('method', 'POST');
-		$('#cmpReplyArrForm').attr('target', '_self')
-		$('#cmpReplyArrForm').submit();
+	    		
+	    	var cmpNoArr = [];
+	    	
+	    	$('input[name="cmpBatchReply"]').each(function(){
+	    		if(this.checked){
+	    			
+	    			var cmpReplyYn = $(this).data('cmpreplyyn');
+	    			// 회신하지 않은 상태만 복사
+	    			if('N' == cmpReplyYn){
+	    				var cmpNo = $(this).data('cmpno');
+	        			cmpNoArr.push(cmpNo);
+	    			}
+	    			
+	    		}
+	    	});
+	    	
+	    	var formTag = '<form id="cmpReplyArrForm"></form>'
+			var inputTag = '<input type ="hidden" name="cmpNoArr" value=' + cmpNoArr + '>';
+			
+			$('body').append(formTag);
+			$('#cmpReplyArrForm').append(inputTag);
+	
+			$('#cmpReplyArrForm').attr('action', '/cmp/offerInfo/cmpOfferInfoUpdateArrReplyYn');
+			$('#cmpReplyArrForm').attr('method', 'POST');
+			$('#cmpReplyArrForm').attr('target', '_self')
+			$('#cmpReplyArrForm').submit();
     	}
     	
     });

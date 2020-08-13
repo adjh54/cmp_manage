@@ -37,8 +37,9 @@
 		<table class="table table-bordered table-hover">
 			<colgroup>
 				<col width="4%"/>	<!-- 번호 				>> 	4 -->
-				<col width="15%"/>	<!-- 회사명(회사위치) 	>>	20 -->	
-				<col width="12%"/>	<!-- 회사규모 			>>	50 -->
+				<col width="12%"/>	<!-- 회사명(회사위치) 	>>	20 -->	
+				<col width="10%"/>	<!-- 회사규모 			>>	50 -->
+				<col width="6%"/>	<!-- 프로세스			>>	85 -->
 				<col width="18%"/>	<!-- 서류전형 			>>	85 -->
 				<col width="18%"/>	<!-- 1차면접 			>>	85 -->
 				<col width="18%"/>	<!-- 2차면접 			>>	85 -->
@@ -49,6 +50,7 @@
 					<th class="text-center">번호</th>
 					<th class="text-center">회사 명 (회사 위치)</th>
 					<th class="text-center">회사규모</th>
+					<th class="text-center">프로세스</th>
 					<th class="text-center">서류 전형</th>
 					<th class="text-center">1차면접 전형</th>
 					<th class="text-center">2차면접 전형</th>
@@ -95,6 +97,19 @@
 										<c:otherwise>
 											<c:out value="미지정 기업"/>
 										</c:otherwise>
+									</c:choose>
+								</td>
+								
+								<td class="text-center">
+									<c:choose>
+										<c:when test="${'Y' eq list.cmpProcessFinalCompleteYn}">
+											<c:out value="종료"/>
+										</c:when>
+										<c:when test="${'N' eq list.cmpProcessFinalCompleteYn}">
+											<p style="font-weight: bold; color: red;">
+												<c:out value="진행중"/>
+											</p>
+										</c:when>
 									</c:choose>
 								</td>
 								<td class="text-center">

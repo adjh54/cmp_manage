@@ -36,4 +36,9 @@ public class CmpApplyInfoServiceImpl implements CmpApplyInfoService{
 	public int cmpApplyInfoUpdate(CmpApplyInfoVO cmpApplyInfoVo) throws Exception {
 		return cmpApplyInfoMapper.cmpApplyInfoUpdate(cmpApplyInfoVo);
 	}
+
+	@Override
+	public int cmpApplyInfoUpdateProcessCompleteYn(CmpApplyInfoVO cmpApplyInfoVo) throws Exception {
+		return cmpApplyInfoMapper.cmpApplyInfoUpdateProcessCompleteYn(cmpApplyInfoVo);
+	}
 }

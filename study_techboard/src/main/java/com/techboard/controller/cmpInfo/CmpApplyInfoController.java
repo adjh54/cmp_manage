@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.techboard.service.itfc.cmpInfo.CmpApplyInfoService;
 import com.techboard.vo.cmpInfo.CmpApplyInfoVO;
+import com.techboard.vo.cmpInfo.CmpInfoVO;
 import com.techboard.vo.common.Pagination;
 /**
  * 이종훈 CmpInfoController
@@ -109,6 +110,31 @@ public class CmpApplyInfoController {
 		
 		try {
 			result = service.cmpApplyInfoUpdate(cmpApplyInfoVo);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+		}
+		
+		mv.addObject("resultMsg", result);
+		mv.setViewName("redirect:/cmp/applyInfo/cmpApplyInfoList");		// 회사 목록 메인 페이지로 이동
+		
+		return mv;
+	}
+	
+	/**
+	 * 회사지원 프로세스 최종완료 여부 수정
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/cmpApplyInfoUpdateProcessCompleteYn", method = RequestMethod.POST)
+	public ModelAndView cmpApplyInfoUpdateProcessCompleteYn(HttpServletRequest req, CmpApplyInfoVO cmpApplyInfoVo) {
+		LOGGER.info("CmpApplyInfoController >> cmpApplyInfoUpdateProcessCompleteYn");
+		ModelAndView mv = new ModelAndView();
+		
+		int result = 0;
+		
+		try {
+			result = service.cmpApplyInfoUpdateProcessCompleteYn(cmpApplyInfoVo);
 		} catch (Exception e) {
 			LOGGER.info(e.getMessage());
 		}

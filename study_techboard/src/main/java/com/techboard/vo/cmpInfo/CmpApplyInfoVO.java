@@ -43,6 +43,7 @@ public class CmpApplyInfoVO extends CommonVO{
 	private String regDttm;
 	private String modDttm;
 	private String useYn;
+	private String cmpProcessFinalCompleteYn;
 
 //	TB_CMP_INFO 테이블
 	private String cmpTitle;

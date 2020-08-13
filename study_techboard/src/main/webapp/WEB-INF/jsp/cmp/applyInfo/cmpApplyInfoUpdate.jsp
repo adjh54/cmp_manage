@@ -19,13 +19,20 @@
 		<c:if test="${'NULL' ne item.cmpRecuritProcess or '' ne item.cmpRecuritProcess}">
 			<table border="1" class="table table-bordered table-hover">
 				<colgroup>
-					<col width="50%">	<!-- 10 -->
-					<col width="50%">	<!-- 100 -->
+					<col width="20%">	<!-- 10 -->
+					<col width="40%">	<!-- 10 -->
+					<col width="40%">	<!-- 100 -->
 				</colgroup>
 				<tbody>
 					<tr>
 						<th class="text-center">${item.cmpTitle}의 채용 절차</th>
-						<td class="text-center">${item.cmpRecuritProcess}</td>
+						<td class="text-center" colspan="2">
+							${item.cmpRecuritProcess}
+							<c:if test="${'N' eq item.cmpProcessFinalCompleteYn}">
+							&nbsp;&nbsp;&nbsp;
+							<input type="button" class="btn btn-danger" id="prcessComplteYnBtn" data-cmpno ="${item.cmpNo}" data-cmptitle ="${item.cmpTitle}" value="최종완료 처리"/>
+							</c:if>
+						</td>
 					</tr>
 				</tbody>
 			</table>

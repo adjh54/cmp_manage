@@ -20,26 +20,32 @@
 			<table border="1" class="table table-bordered table-hover">
 				<colgroup>
 					<col width="10%">	<!-- 10 -->
-					<col width="90%">	<!-- 100 -->
+					<col width="30%">	<!-- 40 -->
+					<col width="60%">	<!-- 100 -->
 				</colgroup>
 				<tbody>
 					<c:choose>
-					
 						<c:when test="${'Y' eq cmpInfoDetail.cmpApplyYn}">
 							<tr>
 								<th class="text-center">회사 한줄평</th>
-								<td><textarea class="form-control" rows="5" id = "cmpComment" name="cmpComment" readonly="readonly">${cmpInfoDetail.cmpComment}</textarea> </td>
+								<td colspan="2">
+									<textarea class="form-control" rows="5" id = "cmpComment" name="cmpComment" readonly="readonly">${cmpInfoDetail.cmpComment}</textarea>
+								</td>
 							</tr>
 						</c:when>
 						
-						<c:when test="${'N' eq cmpInfoDetail.cmpApplyYn }">
+						<c:when test="${'N' eq cmpInfoDetail.cmpApplyYn}">
 							<tr>
 								<th class="text-center">회사 한줄평</th>
-								<td><textarea class="form-control" rows="5" id = "cmpComment" name="cmpComment">${cmpInfoDetail.cmpComment}</textarea> </td>
+								<td colspan="2">
+									<textarea class="form-control" rows="5" id = "cmpComment" name="cmpComment">${cmpInfoDetail.cmpComment}</textarea>
+								</td>
 							</tr>
 							<tr>
 								<th class="text-center">액션</th>
-								<td><input type="button" class="btn btn-default pull-right" id= "cmpCommentBtn" value = "한줄평 수정"></td>
+								<td colspan="2">
+									<input type="button" class="btn btn-default pull-right" id= "cmpCommentBtn" value = "한줄평 수정">
+								</td>
 							</tr>
 						</c:when>
 					</c:choose>
@@ -56,7 +62,8 @@
 			<table border="1" class="table table-bordered table-hover">
 					<colgroup>
 						<col width="10%">	<!-- 10 -->
-						<col width="90%">	<!-- 100 -->
+						<col width="30%">	<!-- 10 -->
+						<col width="60%">	<!-- 100 -->
 					</colgroup>
 				
 				<tbody>
@@ -126,8 +133,8 @@
 					</tr>
 					
 					<tr>
-						<th class="text-center">회사 포지션</th>
-						<td><p style="white-space: pre-line;">${cmpInfoDetail.cmpJobPosition}</p></td>
+						<th class="text-center">공고 제목</th>
+						<td>${cmpInfoDetail.cmpJobPosition}</td>
 					</tr>
 					
 					<tr>

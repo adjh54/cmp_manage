@@ -102,7 +102,7 @@
 							<c:out value="회사 명 (회사 위치)"/>
 						</th>
 						<th class="text-center">
-							<c:out value="포지션"/>
+							<c:out value="공고제목"/>
 						</th>
 						<th class="text-center">
 							<c:out value="공고유형"/>

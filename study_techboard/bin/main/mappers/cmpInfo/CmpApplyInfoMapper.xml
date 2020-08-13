@@ -120,6 +120,7 @@
 					    ,	A.REG_DTTM						AS	regDttm
 					    ,	A.MOD_DTTM						AS 	modDttm
 					    ,	A.USE_YN						AS 	useYn
+					    ,	A.CMP_PROCESS_FINAL_COMPLETE_YN	AS 	cmpProcessFinalCompleteYn
 					    ,	B.CMP_TITLE						AS 	cmpTitle
 					    ,	B.CMP_LOCATION					AS 	cmpLocation	
 					    ,	B.CMP_FOUNDED_YEAR				AS 	cmpFoundedYear
@@ -152,7 +153,7 @@
 					AND		A.use_yn = 'Y'
 					AND		B.use_yn = 'N'
 					AND		A.user_id = 'admin'		-- 차후 로그인 기능추가 이후 변경 예정 
-			        ORDER BY A.USE_YN DESC, A.REG_DTTM DESC, A.CMP_APPLY_DOC_INTERVIEW_DTTM
+			        ORDER BY A.CMP_PROCESS_FINAL_COMPLETE_YN ,A.REG_DTTM DESC, A.CMP_APPLY_DOC_RESULT_DTTM DESC
 					<include refid= "COMMON_PAGING_TAIL"/>
 				) V,	
 				(select @rownum:=0) R 
@@ -170,7 +171,6 @@
 		AND		A.use_yn = 'Y'
 		AND		B.use_yn = 'N'
 		AND		A.user_id = 'admin'		-- 차후 로그인 기능추가 이후 변경 예정 
-        ORDER BY A.USE_YN DESC, A.REG_DTTM DESC, A.CMP_APPLY_DOC_INTERVIEW_DTTM
     </select>
     
     <!-- cmpApplyInfoDetail - 회사지원 정보 상세 조회-->
@@ -194,12 +194,13 @@
 		    ,	A.CMP_APPLY_DOC_RESULT_DTTM			AS 	cmpApplyDocResultDttm
 		    ,	A.CMP_APPLY_1ST_RESULT_DTTM			AS 	cmpApply1stResultDttm
 		    ,	A.CMP_APPLY_2ST_RESULT_DTTM			AS 	cmpApply2stResultDttm
-            , 	A.CMP_INTERVIEW_PREPARE_INFO 		AS cmpInterviewPrepareInfo
-            ,	A.CMP_INTERVIEW_REVIEW_INFO			AS cmpInterviewReviewInfo	 
+            , 	A.CMP_INTERVIEW_PREPARE_INFO 		AS 	cmpInterviewPrepareInfo
+            ,	A.CMP_INTERVIEW_REVIEW_INFO			AS 	cmpInterviewReviewInfo	 
 		    ,	A.USER_ID							AS 	userId
 		    ,	A.REG_DTTM							AS	regDttm
 		    ,	A.MOD_DTTM							AS 	modDttm
 		    ,	A.USE_YN							AS 	useYn
+		    ,	A.CMP_PROCESS_FINAL_COMPLETE_YN		AS 	cmpProcessFinalCompleteYn
 		    ,	B.CMP_TITLE							AS 	cmpTitle
 		    ,	B.CMP_LOCATION						AS 	cmpLocation	
 		    ,	B.CMP_FOUNDED_YEAR					AS 	cmpFoundedYear
@@ -279,6 +280,13 @@
 		WHERE 	CMP_APPLY_NO = #{cmpApplyNo}
     </update>
     
+    <!-- cmpApplyInfoUpdateProcessCompleteYn - 프로세스 최종완료 수정-->
+    <update id="cmpApplyInfoUpdateProcessCompleteYn" parameterType="com.techboard.vo.cmpInfo.CmpApplyInfoVO">
+    	/** cmpApplyInfoUpdateProcessCompleteYn-  프로세스 최종완료 수정**/
+    	UPDATE 	TB_CMP_APPLY_INFO
+	  	SET 	CMP_PROCESS_FINAL_COMPLETE_YN = 'Y'
+		WHERE 	CMP_NO = #{cmpNo}
+    </update>
     
 
 </mapper>
