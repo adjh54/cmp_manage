@@ -1,9 +1,19 @@
 package com.techboard.controller.cmpInfo;
 
+import java.awt.Label;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.techboard.controller.common.ExcelConfig;
 import com.techboard.service.itfc.cmpInfo.CmpInfoService;
-import com.techboard.vo.board.BoardVO;
-import com.techboard.vo.cmpInfo.CmpApplyInfoVO;
 import com.techboard.vo.cmpInfo.CmpInfoVO;
 import com.techboard.vo.common.Pagination;
 /**
@@ -354,6 +363,159 @@ public class CmpInfoController {
 		
 		return null;
 	}
+	/**
+	 * 회사 정보 목록 전체 다운로드
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/cmpInfoListTotalDownload")
+	public void downloadCustomerInfo(CmpInfoVO cmpInfoVo, HttpServletResponse response) {
+        
+		// 오늘날짜
+	    String strToday = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
+	    
+	    // Sheet 생성
+	    XSSFWorkbook workbook = new XSSFWorkbook();
+	    XSSFSheet sheet = workbook.createSheet("회사목록_"+strToday);
+	    XSSFRow row = null;
+	    XSSFCell cell = null;
+	    int rowCount = 0;
+	    int cellCount = 0;
+	 
+	    // Header / Body 초기 구성 + body 중앙정렬
+	    CellStyle headStyle = ExcelConfig.configHeadStyleExcel(workbook);
+	    CellStyle bodyStyle = ExcelConfig.configBodyStyleExcel(workbook);
+	    CellStyle centerBodyStyle = ExcelConfig.configCenterTxtStyleExcel(workbook);
+	    
+	    // 헤더 생성
+	    row = sheet.createRow(rowCount++);
+	    String[] headers = {"번호","회사명(회사위치)","공고 제목","공고 유형","회사규모", "지원상태", "마감일자"};
+	    
+	    for(int i=0; i<headers.length; i++){
+	        cell = row.createCell(cellCount++);
+	        cell.setCellStyle(headStyle);
+	        cell.setCellValue(headers[i]);
+	    }
+	    
+	    
+	    // 데이터 조회
+		try {
+			 List<CmpInfoVO> cmpInfoList = cmpInfoService.selectCmpInfoListTotalDownLoad(cmpInfoVo);
+			
+			// 데이터 생성
+		    for (CmpInfoVO list : cmpInfoList) {
+		        row = sheet.createRow(rowCount++);
+		        cellCount = 0;
+		        
+		        // 바디 셀에 데이터 입력, 스타일 적용
+		        // 1 Sell: 번호
+		        cell = row.createCell(cellCount++);
+		        cell.setCellStyle(centerBodyStyle);
+		        cell.setCellValue(list.getRownum());   // 번호
+		        
+		        // 2 Sell: 회사명(회사위치)
+		        cell = row.createCell(cellCount++);
+		        cell.setCellStyle(centerBodyStyle);
+		        cell.setCellValue(list.getCmpTitle()+"\n ("+list.getCmpLocation()+")");  // 회사명(회사위치)
+
+		        // 3 Sell: 공고제목
+		        cell = row.createCell(cellCount++);
+		        cell.setCellStyle(bodyStyle);
+		        cell.setCellValue(list.getCmpJobPosition());  //  공고제목
+		        
+		        // 3 Sell: 공고유형
+		        switch (list.getCmpRecuritKind()) {
+				case "1":
+					list.setCmpRecuritKind("사람인");
+					break;
+				case "2":
+					list.setCmpRecuritKind("잡코리아");
+					break;
+				case "3":
+					list.setCmpRecuritKind("헤드헌터");
+					break;
+				case "4":
+					list.setCmpRecuritKind("인사담당자");
+					break;
+				default:
+					break;
+				}
+		        cell = row.createCell(cellCount++);
+		        cell.setCellStyle(centerBodyStyle);
+		        cell.setCellValue(list.getCmpRecuritKind());  // 공고 유형
+		        
+		        // 4 Sell: 회사유형
+		        switch (list.getCmpKind()) {
+				case "1":
+					list.setCmpRecuritKind("중소기업");
+					break;
+				case "2":
+					list.setCmpRecuritKind("중견기업");
+					break;
+				case "3":
+					list.setCmpRecuritKind("대기업");
+					break;
+				case "4":
+					list.setCmpRecuritKind("외국계 기업");
+					break;
+				case "5":
+					list.setCmpRecuritKind("공공 기업");
+					break;
+				default:
+					list.setCmpRecuritKind("미지정 기업");
+					break;
+				}
+		        String cmpScale = list.getFoundedYear() + "년차 /"+ list.getCmpEmpCnt() +"명 / \n" +list.getCmpKind()+ list.getCmpTouch()+"억 / "+list.getCmpRecuritKind();
+		        cell = row.createCell(cellCount++);
+		        cell.setCellStyle(centerBodyStyle);
+		        cell.setCellValue(cmpScale);    // 회사 규모
+		        
+		        // 5 Sell: 지원상태
+		        if ("Y".equals(list.getCmpApplyYn())) {
+					list.setCmpApplyYn("지원");
+				} else if("N".equals(list.getCmpApplyYn())) {
+					list.setCmpApplyYn("미 지원");
+				}
+		        cell = row.createCell(cellCount++);
+		        cell.setCellStyle(centerBodyStyle);
+		        cell.setCellValue(list.getCmpApplyYn());  // 지원상태
+		        
+		        
+		        // 6 Sell: 마감일자
+		        if( 0 == Integer.parseInt(list.getDeadlineDay()) ) {
+		        	list.setDeadlineDay("(오늘마감)");
+		        } else if (0 > Integer.parseInt(list.getDeadlineDay())) {
+		        	list.setDeadlineDay("(공고마감)");
+		        } else if( 0 < Integer.parseInt(list.getDeadlineDay())) {
+		        	list.setDeadlineDay("("+list.getDeadlineDay() + ")일 전");
+		        }
+		        
+		        String deadlineDttm = "~ "+list.getCmpDeadlineDttm()+"\n" + list.getDeadlineDay(); 
+		        
+		        cell = row.createCell(cellCount++);
+		        cell.setCellStyle(centerBodyStyle);
+		        cell.setCellValue(deadlineDttm);  // 마감일자
+		    }
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    
+	    // 셀 와이드 설정
+	    for (int i=0; i< headers.length; i++){
+	        sheet.autoSizeColumn(i, true);
+	        if(i == 11){ // 컬럼별 넓이정의
+	            sheet.setColumnWidth(i, 7000);
+	        }
+	    }
+	    
+	    String filename = "회사목록_"+strToday+".xlsx";
+	    String filePath = ExcelConfig.makeFile(workbook, filename);
+	    
+	    ExcelConfig.fileDownload(filePath, filename, response);
+	}
+	
 	
 		
 	/**
@@ -399,4 +561,7 @@ public class CmpInfoController {
 		
 		return cmpInfoVo;
 	}
+	
+	
+	
 }

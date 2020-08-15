@@ -325,9 +325,13 @@ $(function(){
     
     });
     
+    /**
+     * 회사 목록 전체 다운로드 기능
+     * SELECT
+     */
     $("#cmpInfoDownload").on('click', function(e){
-    	alert("다운로드 기능 구현 예정");
-    })
+    	location.href = "/cmp/info/cmpInfoListTotalDownload";
+    });
 
 });
 

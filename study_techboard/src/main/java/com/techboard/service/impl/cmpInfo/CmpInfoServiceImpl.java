@@ -78,5 +78,15 @@ public class CmpInfoServiceImpl implements CmpInfoService{
 		return cmpInfoMapper.cmpInfoUpdateGoodYn(cmpInfoVo);
 	}
 
+	@Override
+	public List<CmpInfoVO> selectCmpInfoListTotalDownLoad(CmpInfoVO cmpInfoVo) throws Exception {
+		return cmpInfoMapper.selectCmpInfoListTotalDownLoad(cmpInfoVo);
+	}
+
+	@Override
+	public List<CmpInfoVO> selectCmpInfoListConditionDownLoad(CmpInfoVO cmpInfoVo) throws Exception {
+		return cmpInfoMapper.selectCmpInfoListConditionDownLoad(cmpInfoVo);
+	}
+
 
 }

@@ -359,4 +359,125 @@
 		    ,	'Y'
 		FROM 	TB_CMP_APPLY_INFO
     </insert>
+    
+    <!-- selectCmpInfoListTotalDownLoad - 회사 정보 목록 전체 다운로드 -->
+    <select id="selectCmpInfoListTotalDownLoad" resultType="com.techboard.vo.cmpInfo.CmpInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpInfoVO">
+	/** selectCmpInfoListTotalDownLoad - 회사 정보 목록 전체 다운로드 **/
+	SELECT 	C.*
+	FROM	(	
+		SELECT 	@rownum:=@rownum+1	AS rownum
+			,	V.*
+		FROM	(
+					<include refid="COMMON_PAGING_HEADER"/>
+		SELECT 	A.CMP_NO					AS 	cmpNo
+			,	A.CMP_TITLE					AS 	cmpTitle
+		    ,	A.CMP_LOCATION				AS 	cmpLocation	
+		    ,	A.CMP_FOUNDED_YEAR			AS 	cmpFoundedYear
+		    ,	date_format(sysdate(), '%Y') - A.CMP_FOUNDED_YEAR AS foundedYear
+		    ,	format(A.CMP_EMP_CNT, 0)	AS 	cmpEmpCnt
+		    ,	format(A.CMP_TOUCH, 0)		AS 	cmpTouch
+		    ,	A.CMP_KIND					AS 	cmpKind
+		    ,	A.CMP_DEADLINE_DTTM			AS 	cmpDeadlineDttm
+		    , 	DATEDIFF(A.CMP_DEADLINE_DTTM, DATE_FORMAT(sysdate(), '%Y%m%d')) AS deadlineDay
+		    ,	A.CMP_JOB_POSITION			AS 	cmpJobPosition
+		    ,	A.CMP_JOB_RESPONSE			AS 	cmpJobResponse
+		    ,	A.CMP_JOB_QUALIFICATION		AS 	cmpJobQualification
+		    ,	A.CMP_JOB_PREFER			AS 	cmpJobPrefer
+		    ,	A.CMP_WAREFARE				AS 	cmpWareFare
+		    ,	A.CMP_COMMENT				AS 	cmpComment
+		    ,	A.REG_DTTM					AS 	regDttm
+			,	A.MOD_DTTM					AS 	modeDttm
+		    ,	A.USE_YN					AS 	useYn
+		    ,	A.CMP_APPLY_YN				AS 	cmpApplyYn
+		    ,	A.CMP_INCEDENCE_RATE		AS 	cmpIncedenceRate
+		    ,	A.CMP_RESIGNATION_RATE		AS 	cmpResignationRate
+		    ,	A.CMP_RECURIT_URL			AS 	cmpRecuritUrl
+		    ,	A.CMP_HOMEPAGE_URL			AS 	cmpHomepageUrl
+		    ,	A.CMP_PROGRAMMER_KIND		AS 	cmpProgrammerKind
+		    , 	A.CMP_FAVORITES_YN			AS 	cmpFavoritesYn
+		    , 	A.CMP_GOOD_YN				AS 	cmpGoodYn
+		    , 	A.CMP_RECURIT_KIND			AS 	cmpRecuritKind
+		    ,	A.CMP_RECURIT_PROCESS		AS 	cmpRecuritProcess
+		    , 	A.CMP_REPLY_YN				AS 	cmpReplyYn
+		FROM	TB_CMP_INFO A
+		WHERE	1=1
+		AND		A.CMP_OFFER_YN = 'N'
+        ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC, A.CMP_DEADLINE_DTTM ASC
+        <include refid= "COMMON_PAGING_TAIL"/>
+				) V,	
+				(select @rownum:=0) R
+			) C
+    </select>
+    
+    <!-- selectCmpInfoListConditionDownLoad - 회사 정보 목록 조건 다운로드 -->
+    <select id="selectCmpInfoListConditionDownLoad" resultType="com.techboard.vo.cmpInfo.CmpInfoVO" parameterType="com.techboard.vo.cmpInfo.CmpInfoVO">
+	/** selectCmpInfoListConditionDownLoad - 회사 정보 목록 조건 다운로드  **/
+	SELECT 	C.*
+	FROM	(	
+		SELECT 	@rownum:=@rownum+1	AS rownum
+			,	V.*
+		FROM	(
+					<include refid="COMMON_PAGING_HEADER"/>
+					SELECT 	A.CMP_NO					AS 	cmpNo
+						,	A.CMP_TITLE					AS 	cmpTitle
+					    ,	A.CMP_LOCATION				AS 	cmpLocation	
+					    ,	A.CMP_FOUNDED_YEAR			AS 	cmpFoundedYear
+					    ,	date_format(sysdate(), '%Y') - A.CMP_FOUNDED_YEAR AS foundedYear
+					    ,	format(A.CMP_EMP_CNT, 0)	AS 	cmpEmpCnt
+					    ,	format(A.CMP_TOUCH, 0)		AS 	cmpTouch
+					    ,	A.CMP_KIND					AS 	cmpKind
+					    ,	A.CMP_DEADLINE_DTTM			AS 	cmpDeadlineDttm
+					    , 	DATEDIFF(A.CMP_DEADLINE_DTTM, DATE_FORMAT(sysdate(), '%Y%m%d')) AS deadlineDay
+					    ,	A.CMP_JOB_POSITION			AS 	cmpJobPosition
+					    ,	A.CMP_JOB_RESPONSE			AS 	cmpJobResponse
+					    ,	A.CMP_JOB_QUALIFICATION		AS 	cmpJobQualification
+					    ,	A.CMP_JOB_PREFER			AS 	cmpJobPrefer
+					    ,	A.CMP_WAREFARE				AS 	cmpWareFare
+					    ,	A.CMP_COMMENT				AS 	cmpComment
+					    ,	A.REG_DTTM					AS 	regDttm
+						,	A.MOD_DTTM					AS 	modeDttm
+					    ,	A.USE_YN					AS 	useYn
+					    ,	A.CMP_APPLY_YN				AS 	cmpApplyYn
+					    ,	A.CMP_INCEDENCE_RATE		AS 	cmpIncedenceRate
+					    ,	A.CMP_RESIGNATION_RATE		AS 	cmpResignationRate
+					    ,	A.CMP_RECURIT_URL			AS 	cmpRecuritUrl
+					    ,	A.CMP_HOMEPAGE_URL			AS 	cmpHomepageUrl
+					    ,	A.CMP_PROGRAMMER_KIND		AS 	cmpProgrammerKind
+					    , 	A.CMP_FAVORITES_YN			AS 	cmpFavoritesYn
+					    , 	A.CMP_GOOD_YN				AS 	cmpGoodYn
+					    , 	A.CMP_RECURIT_KIND			AS 	cmpRecuritKind
+					    ,	A.CMP_RECURIT_PROCESS		AS 	cmpRecuritProcess
+					    , 	A.CMP_REPLY_YN				AS 	cmpReplyYn
+					FROM	TB_CMP_INFO A
+					WHERE	1=1
+					AND		A.CMP_OFFER_YN = 'N'
+					<if test="null != cmpTitle and !(''.equals(cmpTitle))">
+			        AND 	A.CMP_TITLE LIKE CONCAT('%', #{cmpTitle}, '%') 
+			        </if>
+					<if test="null != cmpLocation and !(''.equals(cmpLocation))">
+			        AND 	A.CMP_LOCATION LIKE CONCAT('%', #{cmpLocation}, '%') 
+			        </if>
+					<if test="null != cmpRecuritKind and !(''.equals(cmpRecuritKind))">
+			        AND 	A.CMP_RECURIT_KIND = #{cmpRecuritKind}
+			        </if>
+					<if test="null != cmpApplyYn and !(''.equals(cmpApplyYn))">
+			        AND 	A.CMP_APPLY_YN = #{cmpApplyYn}
+			        </if>
+					<if test="null != cmpGoodYn and !(''.equals(cmpGoodYn))">
+			        AND 	A.CMP_GOOD_YN = #{cmpGoodYn}
+			        </if>
+			        ORDER BY USE_YN DESC, A.CMP_FAVORITES_YN DESC
+			        <if test='"Y" eq orderingFlag'>
+			        	, ${orderKind} ${ordering}
+			        </if>
+			        , A.CMP_DEADLINE_DTTM ASC
+					<include refid= "COMMON_PAGING_TAIL"/>
+				) V,	
+				(select @rownum:=0) R
+			) C
+			<if test="(null != startIndex and !(''.equals(startIndex))) or (null != pageSize and !(''.equals(pageSize)))">
+				LIMIT #{startIndex}, #{pageSize}
+			</if>
+    </select>
+    
 </mapper>

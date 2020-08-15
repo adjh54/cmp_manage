@@ -34,4 +34,8 @@ public interface CmpInfoService {
 
 	public int cmpInfoUpdateApplyYn(CmpInfoVO cmpInfoVO) throws Exception;
 	
+	public List<CmpInfoVO> selectCmpInfoListTotalDownLoad(CmpInfoVO cmpInfoVo) throws Exception; 			//	회사 정보 목록 전체 다운로드
+	
+	public List<CmpInfoVO> selectCmpInfoListConditionDownLoad(CmpInfoVO cmpInfoVo) throws Exception; 		//	회사 정보 목록 상태 다운로드
+	
 }
