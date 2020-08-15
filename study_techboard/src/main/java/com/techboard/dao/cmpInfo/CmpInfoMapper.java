@@ -10,7 +10,7 @@ import com.techboard.vo.cmpInfo.CmpInfoVO;
 @Mapper
 public interface CmpInfoMapper {
 	
-public List<CmpInfoVO> selectCmpInfoList(CmpInfoVO cmpInfoVo) throws Exception; 	//	회사정보 목록 조회
+	public List<CmpInfoVO> selectCmpInfoList(CmpInfoVO cmpInfoVo) throws Exception; 	//	회사정보 목록 조회
 	
 	public CmpInfoVO selectCmpInfoListCnt(CmpInfoVO cmpInfoVo) throws Exception;		// 	회사정보 목록 카운트 조회
 		

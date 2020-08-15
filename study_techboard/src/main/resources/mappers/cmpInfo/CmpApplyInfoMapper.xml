@@ -287,7 +287,7 @@
     <update id="cmpApplyInfoUpdateProcessCompleteYn" parameterType="com.techboard.vo.cmpInfo.CmpApplyInfoVO">
     	/** cmpApplyInfoUpdateProcessCompleteYn-  프로세스 최종완료 수정**/
     	UPDATE 	TB_CMP_APPLY_INFO
-	  	SET 	CMP_PROCESS_FINAL_COMPLETE_YN = 'Y'
+	  	SET 	CMP_PROCESS_FINAL_COMPLETE_YN = #{cmpProcessFinalCompleteYn}
 		WHERE 	CMP_NO = #{cmpNo}
     </update>
     

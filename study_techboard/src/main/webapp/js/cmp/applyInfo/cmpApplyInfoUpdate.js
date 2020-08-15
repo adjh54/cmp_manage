@@ -285,9 +285,11 @@ $(function(){
 		if (result){
 			var formTag = '<form id="cmpApplyInfoForm"></form>'
 			var inputTag = '<input type ="hidden" name="cmpNo" value=' + cmpNo + '>';
+			var inputTag2 = '<input type ="hidden" name="cmpProcessFinalCompleteYn" value="Y">';
 			
 			$('body').append(formTag);
 			$('#cmpApplyInfoForm').append(inputTag);
+			$('#cmpApplyInfoForm').append(inputTag2);
 			
 			$('#cmpApplyInfoForm').attr('action', '/cmp/applyInfo/cmpApplyInfoUpdateProcessCompleteYn');
 			$('#cmpApplyInfoForm').attr('method', 'POST');
@@ -298,6 +300,37 @@ $(function(){
 		}
 		
 	});
+	
+	/**
+	 * 프로세스 최종 완료 처리 
+	 */
+	$("#rePrcessComplteYnBtn").on("click", function(e){
+		
+		var cmpNo = $(this).data("cmpno");
+		var cmpTitle = $(this).data("cmptitle");
+		
+		var result = confirm("'"+cmpTitle+"'의 상태를 진행중 상태로 변경하시겠습니까?");
+		
+		if (result){
+			var formTag = '<form id="cmpApplyInfoForm"></form>'
+			var inputTag = '<input type ="hidden" name="cmpNo" value=' + cmpNo + '>';
+			var inputTag2 = '<input type ="hidden" name="cmpProcessFinalCompleteYn" value="N">';
+			
+			$('body').append(formTag);
+			$('#cmpApplyInfoForm').append(inputTag);
+			$('#cmpApplyInfoForm').append(inputTag2);
+			
+			$('#cmpApplyInfoForm').attr('action', '/cmp/applyInfo/cmpApplyInfoUpdateProcessCompleteYn');
+			$('#cmpApplyInfoForm').attr('method', 'POST');
+			$('#cmpApplyInfoForm').attr('target', '_self')
+			$('#cmpApplyInfoForm').submit();
+			
+			alert("완료 처리가 되었습니다.");
+		}
+		
+	});
+	
+	
 	
 	
 });

@@ -95,7 +95,7 @@
 						<th class="text-center" colspan="9">
 							<div class="input-group pull-left">
 								<div class="input-control">
-									<button class="btn btn-sm" type ="button" id="cmpInfoDownload">
+									<button class="btn btn-sm btn-secondary" type ="button" id="cmpInfoDownload">
 										<c:out value="엑셀 다운로드"/>
 									</button>
 								</div>

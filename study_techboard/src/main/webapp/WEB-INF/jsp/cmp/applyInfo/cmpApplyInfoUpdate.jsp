@@ -28,10 +28,17 @@
 						<th class="text-center">${item.cmpTitle}의 채용 절차</th>
 						<td class="text-center" colspan="2">
 							${item.cmpRecuritProcess}
-							<c:if test="${'N' eq item.cmpProcessFinalCompleteYn}">
-							&nbsp;&nbsp;&nbsp;
-							<input type="button" class="btn btn-danger" id="prcessComplteYnBtn" data-cmpno ="${item.cmpNo}" data-cmptitle ="${item.cmpTitle}" value="최종완료 처리"/>
-							</c:if>
+							<c:choose>
+								<c:when test="${'N' eq item.cmpProcessFinalCompleteYn}">
+								&nbsp;&nbsp;&nbsp;
+								<input type="button" class="btn btn-danger" id="prcessComplteYnBtn" data-cmpno ="${item.cmpNo}" data-cmptitle ="${item.cmpTitle}" value="최종완료 처리"/>
+								</c:when>
+								
+								<c:when test="${'Y' eq item.cmpProcessFinalCompleteYn}">
+								&nbsp;&nbsp;&nbsp;
+								<input type="button" class="btn btn-danger" id="rePrcessComplteYnBtn" data-cmpno ="${item.cmpNo}" data-cmptitle ="${item.cmpTitle}" value="진행중 처리"/>
+								</c:when>
+							</c:choose>
 						</td>
 					</tr>
 				</tbody>

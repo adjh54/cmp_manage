@@ -176,6 +176,7 @@
 												<c:out value="면접 진행중"/><br>
 											</a>
 												*면접일자: ${list.cmpApply1stInterviewDttm}(${list.apply1stInterviewDayOfWeek})<br>
+												*면접시간: ${list.cmpApply1stInterviewTime}<br>
 												[ ${list.apply1stExcessDay}일 뒤 면접 예정]
 										</c:when>
 										
@@ -239,6 +240,7 @@
 											<a style="cursor:hand; font-weight: bold;" class="cmpTitle" data-id="${list.cmpNo}">
 												<c:out value="면접 진행중"/><br>
 												*면접일자: ${list.cmpApply2stInterviewDttm}(${list.apply2stInterviewDayOfWeek})<br>
+												*면접시간: ${list.cmpApply2stInterviewTime}<br>
 												[ ${list.apply2stExcessDay}일 뒤 면접 예정]
 											</a>
 										</c:when>

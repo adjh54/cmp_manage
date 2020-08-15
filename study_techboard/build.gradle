@@ -27,13 +27,17 @@ dependencies {
   	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16' 		// log4j2
 	implementation 'mysql:mysql-connector-java:5.1.46'							// MySQL Connection
 
-	implementation 'org.projectlombok:lombok'			// Lombok
+	implementation 'org.projectlombok:lombok'						// Lombok
 
-	implementation 'javax.servlet:jstl:1.2'				// JSP Page
-	implementation 'org.apache.tiles:tiles-jsp:3.0.8'	// JSP tiles
-	implementation 'org.webjars:jquery:2.2.1'			// JQuery
-  	implementation 'org.webjars:jquery-ui:1.11.4'		// JQuery UI
-  	implementation 'org.webjars:bootstrap:3.3.6'		// Bootstrap
+	implementation 'javax.servlet:jstl:1.2'							// JSP Page
+	implementation 'org.apache.tiles:tiles-jsp:3.0.8'				// JSP tiles
+	implementation 'org.webjars:jquery:2.2.1'						// JQuery
+  	implementation 'org.webjars:jquery-ui:1.11.4'					// JQuery UI
+  	implementation 'org.webjars:bootstrap:3.3.6'					// Bootstrap
+  	implementation 'com.fasterxml.jackson.core:2.7.3'				// Jackson
+  	compile group: 'org.apache.poi', name: 'poi', version: '3.11'		// POI
+	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.11'
+	compile group: 'commons-io', name: 'commons-io', version: '2.4'
     
 //    implementation 'com.fasterxml.jackson.core:2.7.3'	// Jackson
     
