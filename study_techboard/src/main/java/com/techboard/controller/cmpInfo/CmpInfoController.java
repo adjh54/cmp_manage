@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.techboard.controller.common.ExcelConfig;
+import com.techboard.controller.common.ExcelUtil;
 import com.techboard.service.itfc.cmpInfo.CmpInfoService;
 import com.techboard.vo.cmpInfo.CmpInfoVO;
 import com.techboard.vo.common.Pagination;
@@ -383,14 +384,16 @@ public class CmpInfoController {
 	    int rowCount = 0;
 	    int cellCount = 0;
 	 
+	    
 	    // Header / Body 초기 구성 + body 중앙정렬
-	    CellStyle headStyle = ExcelConfig.configHeadStyleExcel(workbook);
-	    CellStyle bodyStyle = ExcelConfig.configBodyStyleExcel(workbook);
-	    CellStyle centerBodyStyle = ExcelConfig.configCenterTxtStyleExcel(workbook);
+	    CellStyle headStyle = ExcelUtil.configHeadStyleExcel(workbook);
+	    CellStyle bodyStyle = ExcelUtil.configBodyStyleExcel(workbook);
+	    CellStyle centerBodyStyle = ExcelUtil.configCenterTxtStyleExcel(workbook);
+	   
 	    
 	    // 헤더 생성
 	    row = sheet.createRow(rowCount++);
-	    String[] headers = {"번호","회사명(회사위치)","공고 제목","공고 유형","회사규모", "지원상태", "마감일자"};
+	    String[] headers = {"번호", "회사명(회사위치)", "공고 제목", "공고 유형", "회사규모", "입사율/퇴사율", "지원상태", "마감일자"};
 	    
 	    for(int i=0; i<headers.length; i++){
 	        cell = row.createCell(cellCount++);
@@ -445,7 +448,7 @@ public class CmpInfoController {
 		        cell.setCellStyle(centerBodyStyle);
 		        cell.setCellValue(list.getCmpRecuritKind());  // 공고 유형
 		        
-		        // 4 Sell: 회사유형
+		        // 4 Sell: 공고 유형
 		        switch (list.getCmpKind()) {
 				case "1":
 					list.setCmpRecuritKind("중소기업");
@@ -466,12 +469,20 @@ public class CmpInfoController {
 					list.setCmpRecuritKind("미지정 기업");
 					break;
 				}
+		        
+		        // 5 Sell: 회사 규모
 		        String cmpScale = list.getFoundedYear() + "년차 /"+ list.getCmpEmpCnt() +"명 / \n" +list.getCmpKind()+ list.getCmpTouch()+"억 / "+list.getCmpRecuritKind();
 		        cell = row.createCell(cellCount++);
 		        cell.setCellStyle(centerBodyStyle);
 		        cell.setCellValue(cmpScale);    // 회사 규모
 		        
-		        // 5 Sell: 지원상태
+		        // 6 Sell: 입사율/퇴사율
+		        String cmpState = list.getCmpIncedenceRate() +"% / "+ list.getCmpResignationRate()+"%";
+		        cell = row.createCell(cellCount++);
+		        cell.setCellStyle(centerBodyStyle);
+		        cell.setCellValue(cmpState);    // 회사 규모
+		        
+		        // 7 Sell: 지원상태
 		        if ("Y".equals(list.getCmpApplyYn())) {
 					list.setCmpApplyYn("지원");
 				} else if("N".equals(list.getCmpApplyYn())) {
@@ -482,7 +493,7 @@ public class CmpInfoController {
 		        cell.setCellValue(list.getCmpApplyYn());  // 지원상태
 		        
 		        
-		        // 6 Sell: 마감일자
+		        // 8 Sell: 마감일자
 		        if( 0 == Integer.parseInt(list.getDeadlineDay()) ) {
 		        	list.setDeadlineDay("(오늘마감)");
 		        } else if (0 > Integer.parseInt(list.getDeadlineDay())) {
@@ -490,9 +501,7 @@ public class CmpInfoController {
 		        } else if( 0 < Integer.parseInt(list.getDeadlineDay())) {
 		        	list.setDeadlineDay("("+list.getDeadlineDay() + ")일 전");
 		        }
-		        
 		        String deadlineDttm = "~ "+list.getCmpDeadlineDttm()+"\n" + list.getDeadlineDay(); 
-		        
 		        cell = row.createCell(cellCount++);
 		        cell.setCellStyle(centerBodyStyle);
 		        cell.setCellValue(deadlineDttm);  // 마감일자
@@ -510,14 +519,19 @@ public class CmpInfoController {
 	        }
 	    }
 	    
-	    String filename = "회사목록_"+strToday+".xlsx";
-	    String filePath = ExcelConfig.makeFile(workbook, filename);
+	    String filename = "회사 목록_"+strToday+".xlsx";
+	    String filePath = ExcelUtil.makeFile(workbook, filename);
 	    
-	    ExcelConfig.fileDownload(filePath, filename, response);
+	    ExcelUtil.fileDownload(filePath, filename, response);
 	}
 	
 	
 		
+	private CellRangeAddress CellRangeAddress(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/**
 	 * 검색어 처리 Method
 	 * 차후 공용 Method로 변경 예정
